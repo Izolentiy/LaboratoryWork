@@ -1,24 +1,20 @@
 #include <iostream>
+#include "utils.cpp"
 
-using namespace std;
+#define ARR_SIZE 7
 
-void print_array(int arr[], int arr_size) {
-    cout << '{';
-    for (int i = 0; i < arr_size; i++) {
-        if (i == arr_size - 1) {
-            cout << arr[i] << '}' << endl;
-        }
-        else cout << arr[i] << ' ';
-    }
-}
-
-/*
-Функция производящая циклический сдвиг элементов массива влево на k элементов
-\param arr[] массив, в котором надо произвести сдвиг
-\param size размер массива
-\param k количество элементов сдвига
-*/
+/**
+ * Функция производящая циклический сдвиг элементов массива влево на k элементов
+ * @param arr[] массив, в котором надо произвести сдвиг
+ * @param size размер массива
+ * @param k количество элементов сдвига
+ */
 void cycle_shift(int arr[], int size, int k) {
+    if (k < 0) {
+        std::cout << "Illegal shift value" << std::endl;
+        return;
+    }
+
     k %= size;
     if (size % 2 == 0) {
         int pair_elem = 0;
@@ -41,13 +37,18 @@ void cycle_shift(int arr[], int size, int k) {
     }
 }
 
-/*
-Функция производящая циклический сдвиг элементов массива влево на k элементов. (Реализованна через указатели)
-\param ptr_0 указатель на нулевой элемент массива
-\param size размер массива
-\param k количество элементов сдвига
-*/
+/**
+ * Функция производящая циклический сдвиг элементов массива влево на k элементов. (Реализованна через указатели)
+ * @param ptr_0 указатель на нулевой элемент массива
+ * @param size размер массива
+ * @param k количество элементов сдвига
+ */
 void cycle_shift_ptr(int* ptr_0, int size, int k) {
+    if (k < 0) {
+        std::cout << "Illegal shift value" << std::endl;
+        return;
+    }
+
     k %= size;
     if (size % 2 == 0) {
         int pair_elem = 0;
@@ -71,11 +72,11 @@ void cycle_shift_ptr(int* ptr_0, int size, int k) {
 }
 
 int main() {
-    int arr[] = {0, 1, 2, 3, 4, 5, 6};
+    int arr[ARR_SIZE] = {0, 1, 2, 3, 4, 5, 6};
 
-    print_array(arr, size(arr));
-    cycle_shift_ptr(arr, size(arr), 9);
-    print_array(arr, size(arr));
+    print_array(arr, ARR_SIZE);
+    cycle_shift_ptr(arr, ARR_SIZE, 9);
+    print_array(arr, ARR_SIZE);
 
     return 0;
 }
