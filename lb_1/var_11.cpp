@@ -8,7 +8,7 @@
  * @param n количество слоев в пирамиде. В каждом слое n ^ 2 кубиков. На самом верхнем слое 1 кубик.
  * @param weight вес одного кубика
  */
-int weight_calc(int n, int weight) {
+int weight_calc(const int& n, const int& weight) {
     return n ^ 2 * weight;
 }
 
