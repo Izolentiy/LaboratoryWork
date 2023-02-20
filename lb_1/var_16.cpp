@@ -8,7 +8,7 @@
  * @param arr массив надо которым надо произвести операцию
  * @param size размер массива
  */
-void divide_by_mid(int arr[], int size) {
+void divide_by_mid(int arr[], const int& size) {
     // Определеяем среднее значение
     int mid = 0;  // Среднее арифметическое значение элементов в массиве
     for (int i = 0; i < size; i++) {
