@@ -17,13 +17,13 @@ void print_array(int arr[], const int& arr_size) {
 // 1 задание 
 /* В качестве аргумента принимается ссылка. "const" означает, что этот параметр не изменяется */
 /* r_0 радиус самого первого шара */
-double calculate_area(double r_0, const int& n) {
+double calculate_area(const double& r_0, const int& n) {
     double result = 0;
     for (int i = 0; i < n; i++) {
         // Формула площади поверхности шара: 4 * PI * R^2
         result += 4 * PI * (r_0 + i * 0.2) * (r_0 + i * 0.2);
     }
-    return 0.0;
+    return result;
 }
 
 // 2 задание
