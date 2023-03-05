@@ -134,10 +134,19 @@ double sin_taylor(double x, const double& e) {
 
 void sin_runner() {
     double x = -1524.734;
+    double e_1 = 0.001;
+    double e_2 = 0.000001;
+    double e_3 = 0.000000001;
 
-    std::cout << "x = " << x << std::endl;
-    std::cout << "Library sin: " << sin(x) << std::endl;
-    std::cout << "Handmade sin: " << sin_taylor(x, 0.000001) << std::endl;
+    using std::cout, std::endl;
+    cout.precision(20);
+
+    cout << "Precision = 20 after point" << endl;
+    cout << "x = " << x << endl;
+    cout << "Library sin: " << sin(x) << endl;
+    cout << "Handmade sin(e_1): " << sin_taylor(x, e_1) << endl;
+    cout << "Handmade sin(e_2): " << sin_taylor(x, e_2) << endl;
+    cout << "Handmade sin(e_3): " << sin_taylor(x, e_3) << endl;
 }
 
 int main() {
