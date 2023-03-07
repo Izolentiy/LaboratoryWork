@@ -4,19 +4,6 @@
 /**
  * Функция для вывода элементов массива в консоль
  */
-void print_array(int arr[], int arr_size) {
-    std::cout << '{';
-    for (int i = 0; i < arr_size; i++) {
-        if (i == arr_size - 1) {
-            std::cout << arr[i] << '}' << std::endl;
-        }
-        else std::cout << arr[i] << ' ';
-    }
-}
-
-/**
- * Функция для вывода элементов массива в консоль
- */
 void print_array(float arr[], int arr_size, bool verticaly = false) {
     if (verticaly) {
         std::cout << '{' << std::endl;
@@ -28,11 +15,9 @@ void print_array(float arr[], int arr_size, bool verticaly = false) {
     }
     std::cout << "{ ";
     for (int i = 0; i < arr_size; i++) {
-        if (i == arr_size - 1) {
-            std::cout << arr[i] << " }" << std::endl;
-        }
-        else std::cout << arr[i] << ' ';
+        std::cout << arr[i] << ' ';
     }
+    std::cout << '}' << std::endl;
 }
 
 // /**
@@ -62,9 +47,7 @@ void print_array(float arr[], int arr_size, bool verticaly = false) {
  * @param max верхняя граница значений
  */
 void fill_array(float arr[], int arr_size, float min, float max) {
-    using std::random_device, std::mt19937, std::uniform_real_distribution;
-    
-    random_device rand_dev;
+    using std::mt19937, std::uniform_real_distribution;
     
     mt19937 gen(120);
 

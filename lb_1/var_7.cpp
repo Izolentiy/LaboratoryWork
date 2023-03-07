@@ -33,9 +33,8 @@ double traingles_area_sum(const double& a, const int& n) {
 // Функция перемещает элементы массива, принадлежащие отрезку [c, d] с < d в начало массива
 // size - размер массива
 void move_to_start(int arr[], const int& size, const int& c, const int& d) {
-    // Проверяем выполнение условия c < d, 
-    // а также то, что правая граница отрезка не выходит за пределы массива
-    if (c >= d || d > size) {
+    // Проверяем выполнение условия c < d
+    if (c >= d) {
         std::cout << "Введен неправильный отрезок" << std::endl;
         return;
     }
@@ -75,10 +74,10 @@ double sh(double const& x, double const& e) {
 int main() {
 
     // Код проверяющий второе задание снизу
-    // int arr[] = {1, 2, 3, 4, 5, 6, 7, 8};
-    // print_array(arr, std::size(arr));
-    // move_to_start(arr, std::size(arr), 4, 9);
-    // print_array(arr, std::size(arr));
+    int arr[] = {1, 2, 3, 4, 5, 6, 7, 8};
+    print_array(arr, std::size(arr));
+    move_to_start(arr, std::size(arr), 13, 14);
+    print_array(arr, std::size(arr));
 
     // Код проверяющий третье задание
     // double x = 10;
