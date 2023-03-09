@@ -22,14 +22,32 @@ void bubble_sort(float a[], int l, int r) {
 }
 
 /**
- * 
+ * Сортировка вставками элементов с индексами  в отрезке [l, r]
+ * @param l левый индекс
+ * @param r правый индекс
  */
 void inserting_sort(float a[], int l, int r) {
+    float t = 0;
+    for (int i = l; i <= r; i++) {
+        for (int j = l; j < i; j++) {
+            std::cout << std::fixed << std::setprecision(0) << a[i] << ' ' << a[j] << std::endl;
+            
+            if (a[i] < a[j]) {
+                t = a[i];
+                for (int k = i; k > j; k--) {
+                    a[k] = a[k-1];
+                }
+                a[j] = t;
+                
+                print_array(a, 6, 0, 0);
+            }
 
+        }
+    }
 }
 
 int main() {
-    using std::cin, std::cout, std::endl;
+    // using std::cin, std::cout, std::endl;
 
     // cout << "Enter size of array: ";
     // int s; cin >> s;
@@ -46,9 +64,12 @@ int main() {
     float* a = new float[s];
 
     fill_array(a, s, min, max);
-    print_array(a, s);
-    bubble_sort(a, 0, s-1);
-    print_array(a, s);
+    print_array(a, s, false, 0);
+
+    // bubble_sort(a, 0, s-1);
+    inserting_sort(a, 0, s-1);
+    
+    print_array(a, s, false, 0);
     
     return 0;
 }
