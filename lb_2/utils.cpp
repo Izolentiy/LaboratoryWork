@@ -43,7 +43,17 @@ void fill_array(float arr[], int arr_size, float min, float max) {
     }
 }
 
-void run_sorting_with_time_measurement(float a[], int s, void algorithm (float *, int, int)) {
+/**
+ * Функция для измерения времени выполнения переданной ей
+ * в качестве ардгумента функции сортировки
+ * @param algorithm функция скорость которой измеряется
+ * @param a массив
+ * @param s размер массива
+ */
+void run_with_time_measurement(
+    float a[], int s, 
+    void algorithm (float *, int, int)
+) {
     using namespace std::chrono;
 
     uint64_t time;
