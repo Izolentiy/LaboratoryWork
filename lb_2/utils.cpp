@@ -1,6 +1,7 @@
 #include <iostream>
 #include <random>
 #include <iomanip>
+#include <chrono>
 
 #define SEED 120
 
@@ -40,4 +41,22 @@ void fill_array(float arr[], int arr_size, float min, float max) {
     for (int i = 0; i < arr_size; i++) {
         arr[i] = distr(gen);
     }
+}
+
+void run_sorting_with_time_measurement(float a[], int s, void algorithm (float *, int, int)) {
+    using namespace std::chrono;
+
+    uint64_t time;
+    high_resolution_clock::time_point start;
+    high_resolution_clock::time_point end;
+
+    start = high_resolution_clock::now();
+    algorithm(a, 0, s-1);
+    end = high_resolution_clock::now();
+
+    time = duration_cast<milliseconds>(end - start).count();
+
+    std::cout << "Array[" << s << "] of float" << std::endl;
+    std::cout << "Sorting time: " << time << "[ms]" << std::endl;
+    
 }
