@@ -73,8 +73,9 @@ void inserting_sort(float a[], int l, int r) {
 void merge(float a[], int l, int m, int r) {
     static float b[UINT16_MAX];
     int i, j;
-    for (i = m + 1; i > l; i--) b[i - 1] = a[i - 1];
+    for (i = l; i <= m; i++) b[i] = a[i];
     for (j = m; j < r; j++) b[r + m - j] = a[j + 1];
+    i = l;
     for (int k = l; k <= r; k++)
         if (b[j] < b[i])
             a[k] = b[j--];
@@ -83,11 +84,19 @@ void merge(float a[], int l, int m, int r) {
 
 /**
  * Метод абстрактного обменного слияния
+ * a[] = {1, 3, 4, 8, 2, 5, 6, 7}, 
+ * где a[l] = 1, a[m] = 8, a[r] = 7
+ * @param a массив который надо отсортировать
+ * @param b вспомогательный массив такого же размера
+ * @param l леавая граница отсортированного подмассива 1
+ * @param m правая граница отсортированного подмассива 1
+ * @param r правая граница отсортированного подмассива 2
  */
 void merge(float a[], float b[], int l, int m, int r) {
     int i, j;
     for (i = m + 1; i > l; i--) b[i - 1] = a[i - 1];
     for (j = m; j < r; j++) b[r + m - j] = a[j + 1];
+
     for (int k = l; k <= r; k++)
         if (b[j] < b[i])
             a[k] = b[j--];
@@ -102,7 +111,7 @@ void merge_sort_helper(float a[], float b[], int l, int r) {
     merge_sort_helper(a, b, m + 1, r);
 
     merge(a, b, l, m, r);
-}
+} 
 
 void merge_sort(float a[], int l, int r) {
     float *b = new float[r - l + 1];
@@ -110,51 +119,73 @@ void merge_sort(float a[], int l, int r) {
     delete[] b;
 }
 
+void exchange(float a[], int i, int j) {
+    float t = a[i];
+    a[i] = a[j]; a[j] = t;
+}
+
+int partition(float a[], int l, int r) {
+    int i = l, j = r - 1;
+    while (true) {
+        for (i; a[i] < a[r]; i++);
+        for (j; a[j] > a[r]; j--);
+        if (j <= i) break;
+        exchange(a, i, j);
+        // print_array(a, l, r, 0, 0);
+    }
+    exchange(a, i, r);
+    // print_array(a, l, r, 0, 0);
+    return i;
+}
+
+void quick_sort(float a[], int l, int r) {
+    if (r <= l) return;
+
+    int i = partition(a, l, r);
+    quick_sort(a, l, i - 1);
+    quick_sort(a, i + 1, r);
+}
+
 void time_complexity_example() {
-    uint32_t s = 32747;
     float min = 0, max = 1024;
     
+    uint32_t s = 131072;
     float *a = new float[s];
     fill_array(a, s, min, max);
     
-    // Элементанрые алгоритмы сортировки. O(n^2) время выполнения
-    // программы состоит в квадратичной зависимости от количества элементов
-    
-    // bubble_sort(a, 0, s-1);
-    // inserting_sort(a, 0, s-1);
-    // choosing_sort(a, 0, s-1);
-    // run_with_time_measurement(a, s, bubble_sort);
-    run_with_time_measurement(a, s, merge_sort);
-
-    s = 65535;
+    s = 131072;
     float *b = new float[s];
     fill_array(b, s, min, max);
     
-    // run_with_time_measurement(b, s, bubble_sort);
-    run_with_time_measurement(b, s, merge_sort);
+    // Элементарные алгоритмы сортировки. O(n^2) время выполнения
+    // программы состоит в квадратичной зависимости от количества элементов
+    // bubble_sort(), choosing_sort(), inserting_sort()
 
+    // Более продвинутые алгоритмы сортировки O(N*logN) время выполнения
+    // программы состоит в квазилинейной зависимости от количества элементов
+    // quick_sort(), merge_sort()
+
+    run_with_time_measurement(a, s, quick_sort);
+    run_with_time_measurement(b, s, merge_sort);
 }
 
 void printing_example() {
-    uint16_t s = 15;
+    uint16_t s = 6;
     float min = 0, max = 1024;
     
     float *a = new float[s];
 
     fill_array(a, s, min, max);
-    print_array(a, s, false, 0);
+    print_array(a, 0, s-1, false, 0);
+
+    quick_sort(a, 0, s-1);
     
-    // bubble_sort(a, 0, s-1);
-    // inserting_sort(a, 0, s-1);
-    // choosing_sort(a, 0, s-1);
-    merge_sort(a, 0, s-1);
-    
-    print_array(a, s, false, 0);
+    print_array(a, 0, s-1, false, 0);
 }
 
 int main() {
     time_complexity_example();
-    // printing_example();
+    printing_example();
     
     return 0;
 }

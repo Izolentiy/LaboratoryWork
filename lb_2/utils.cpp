@@ -6,16 +6,18 @@
 #define SEED 120
 
 /**
- * Функция для вывода элементов массива в консоль
+ * Функция для вывода элементов массива с индексами в отрезке [l, r] в консоль
  * @param vert если [true] выведет элементы в столбик
  * @param prec задает количество символов после запятой
+ * @param l левая граница вывода
+ * @param r правая граница вывода
  */
-void print_array(float arr[], int arr_size, bool vert = false, int prec = 2) {
+void print_array(float arr[], int l, int r, bool vert = false, int prec = 2) {
     using std::cout, std::endl, std::setprecision, std::fixed;
 
     if (vert) {
         cout << '{' << endl;
-        for (int i = 0; i < arr_size; i++) {
+        for (int i = l; i <= r; i++) {
             cout << fixed << setprecision(prec) << arr[i] << endl;
         }
         cout << '}' << endl;
@@ -23,7 +25,7 @@ void print_array(float arr[], int arr_size, bool vert = false, int prec = 2) {
     }
 
     cout << "{ ";
-    for (int i = 0; i < arr_size; i++) {
+    for (int i = l; i <= r; i++) {
         cout << fixed << setprecision(prec) << arr[i] << ' ';
     }
     cout << '}' << endl;
