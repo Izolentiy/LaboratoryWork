@@ -1,7 +1,7 @@
 #include <iostream>
 #include <random>
 
-void print_matrix(float **m, int c, int r) {
+void print_matrix(int **m, int c, int r) {
     using std::cout;
     for (int i = 0; i < c; ++i) {
         for (int j = 0; j < r; ++j) {
@@ -9,31 +9,32 @@ void print_matrix(float **m, int c, int r) {
         }
         cout << '\n';
     }
+    cout << '\n';
 }
 
-float** create_matrix(int c, int r) {
-    float **m = new float*[c];
+int** create_matrix(int c, int r) {
+    int **m = new int*[c];
     for (int i = 0; i < c; ++i) {
-        m[i] = new float[r];
+        m[i] = new int[r];
     }
     return m;
 }
 
-void delete_matrix(float **m, int c) {
+void delete_matrix(int **m, int c) {
     for (int i = 0; i < c; ++i) {
         delete[] m[i];
     }
     delete[] m;
 }   
 
-void fill_matrix(float **m, int c, int r, float min, float max) {
+void fill_matrix(int **m, int c, int r, int min, int max) {
     std::random_device dev;
-    std::mt19937 engine(dev);
-    std::uniform_real_distribution dist(min, max);
+    // std::mt19937 engine(dev);
+    std::uniform_int_distribution dist(min, max);
 
     for (int i = 0; i < c; ++i) {
         for (int j = 0; j < r; ++j) {
-            m[i][j] = dist(engine);
+            m[i][j] = dist(dev);
         }
     }
 }
