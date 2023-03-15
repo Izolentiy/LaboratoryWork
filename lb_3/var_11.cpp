@@ -12,7 +12,7 @@ void perform_task(int c, int r, int n, void task(int **m, int c, int r)) {
     print_matrix(m, c, r);
 
     task(m, c, r); // Выполнение задачи
-    
+
     delete_matrix(m, c); // Очищение памяти
 }
 
@@ -35,12 +35,34 @@ void task_2(int **m, int c, int r) {
 }
 
 void task_3(int **m, int c, int r) {
+    int asc_r = 0, des_c = 0;
     
+    for (int i = 0; i < r; ++i) {
+        ++asc_r;
+        for (int j = 1; j < c; ++j) {
+            if (m[j][i] < m[j-1][i]) {
+                --asc_r;
+                break;
+            }
+        }
+    }
+
+    for (int i = 0; i < c; ++i) {
+        ++des_c;
+        for (int j = 1; j < r; ++j) {
+            if (m[i][j] > m[i][j-1]) {
+                --des_c;
+                break;
+            }
+        }
+    }
+    std::cout << "Ascending rows: " << asc_r << ", ";
+    std::cout << "Descending columns: " << des_c << "\n\n";
 }
 
 int main() {
     perform_task(4, 5, 1, task_1);
     perform_task(4, 4, 2, task_2);
-    perform_task(4, 6, 3, task_3);
+    perform_task(3, 4, 3, task_3);
     return 0;
 }
