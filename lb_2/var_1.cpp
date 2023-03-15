@@ -47,7 +47,8 @@ void inserting_sort(float a[], int l, int r) {
     float t = 0;
     for (int i = l; i <= r; i++) {
         for (int j = l; j < i; j++) {
-            // std::cout << std::fixed << std::setprecision(0) << a[i] << ' ' << a[j] << std::endl;
+            // using std::cout, std::fixed, std::setprecision, std::endl;
+            // cout << fixed << setprecision(0) << a[i] << ' ' << a[j] << endl;
             
             if (a[i] < a[j]) {
                 t = a[i];

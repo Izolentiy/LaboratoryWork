@@ -29,7 +29,6 @@ void delete_matrix(int **m, int c) {
 
 void fill_matrix(int **m, int c, int r, int min, int max) {
     std::random_device dev;
-    // std::mt19937 engine(dev);
     std::uniform_int_distribution dist(min, max);
 
     for (int i = 0; i < c; ++i) {
