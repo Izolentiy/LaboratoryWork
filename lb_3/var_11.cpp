@@ -5,7 +5,7 @@
 
 void perform_task(int c, int r, int n, void task(int **m, int c, int r)) {
     // Подготовка окружения
-    int **m = create_matrix(c, r);
+    int **m = create_matrix<int>(c, r);
     fill_matrix(m, c, r, MIN_VAL, MAX_VAL);
 
     std::cout << "\n\n" << "### Task " << n << " ###" << "\n\n";
