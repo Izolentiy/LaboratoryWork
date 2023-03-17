@@ -1,63 +1,50 @@
 #include "utils.cpp"
 
-#define MIN_VAL 0
-#define MAX_VAL 9
-
-void perform_task(int c, int r, int n, void task(int **m, int c, int r)) {
-    // Подготовка окружения
-    int **m = create_matrix<int>(c, r);
-    fill_matrix(m, c, r, MIN_VAL, MAX_VAL);
-
-    std::cout << "\n\n" << "### Task " << n << " ###" << "\n\n";
-    print_matrix(m, c, r);
-
-    task(m, c, r); // Выполнение задачи
-
-    delete_matrix(m, c); // Очищение памяти
-}
-
-void task_1(int **m, int c, int r) {
-    for (int i = 0; i < c; ++i) {
-        for (int j = 0; j < r; ++j) {
-            std::cout << m[i][abs(j - (r - 1) * (i % 2))] << ' ';
+void task_1(int **m, int r, int c) {
+    print_matrix(m, r, c);
+    for (int i = 0; i < r; ++i) {
+        for (int j = 0; j < c; ++j) {
+            std::cout << m[i][abs(j - (c - 1) * (i % 2))] << ' ';
         }
         std::cout << '\n';
     }
 }
 
-void task_2(int **m, int c, int r) {
-    for (int i = 0; i < c; ++i) {
-        for (int j = c - 1; j >= c - 1 - i; --j) {
+void task_2(int **m, int r, int c) {
+    print_matrix(m, r, c);
+    for (int i = 0; i < r; ++i) {
+        for (int j = r - 1; j >= r - 1 - i; --j) {
             m[i][j] = 0;
         }
     }
-    print_matrix(m, c, c);
+    print_matrix(m, r, r);
 }
 
-void task_3(int **m, int c, int r) {
-    int asc_r = 0, des_c = 0;
+void task_3(int **m, int r, int c) {
+    print_matrix(m, r, c);
+    int asc_c = 0, desc_r = 0;
     
-    for (int i = 0; i < r; ++i) {
-        ++asc_r;
-        for (int j = 1; j < c; ++j) {
+    for (int i = 0; i < c; ++i) {
+        ++asc_c;
+        for (int j = 1; j < r; ++j) {
             if (m[j][i] < m[j-1][i]) {
-                --asc_r;
+                --asc_c;
                 break;
             }
         }
     }
 
-    for (int i = 0; i < c; ++i) {
-        ++des_c;
-        for (int j = 1; j < r; ++j) {
+    for (int i = 0; i < r; ++i) {
+        ++desc_r;
+        for (int j = 1; j < c; ++j) {
             if (m[i][j] > m[i][j-1]) {
-                --des_c;
+                --desc_r;
                 break;
             }
         }
     }
-    std::cout << "Ascending rows: " << asc_r << ", ";
-    std::cout << "Descending columns: " << des_c << "\n\n";
+    std::cout << "Ascending columns: " << asc_c << ", ";
+    std::cout << "Descending rows: " << desc_r << "\n\n";
 }
 
 int main() {
