@@ -2,24 +2,26 @@
 
 /**
  * Cортировка выбором элементов с индексами  в отрезке [l, r]
+ * предпочтителен, когда затраты ресурсов на сравнение ключей намного меньше
+ * затрат ресурсов на перемещение элементов
  * @param l левый индекс
  * @param r правый индекс
  */
 void choosing_sort(float a[], int l, int r) {
     float t = 0;
     for (int i = l; i < r; i++) {
-        for (int j = i+1; j <= r; j++) {
-            if (a[j] < a[i]) {
-                t = a[j];
-                a[j] = a[i];
-                a[i] = t;
-            }
-        }
+        int min = i;
+        for (int j = i+1; j <= r; j++)
+            if (a[j] < a[min]) min = j;
+        t = a[i];
+        a[i] = a[min];
+        a[min] = t;
     }
 }
 
 /**
  * Пузырьковая сортировка элементов с индексами  в отрезке [l, r]
+ * 
  * @param l левый индекс
  * @param r правый индекс
  */
@@ -40,15 +42,15 @@ void bubble_sort(float a[], int l, int r) {
 
 /**
  * Сортировка вставками элементов с индексами  в отрезке [l, r]
+ * Вариант реализации, который пришел в голову изначально.
  * @param l левый индекс
  * @param r правый индекс
  */
 void inserting_sort(float a[], int l, int r) {
+    // using std::cout, std::fixed, std::setprecision, std::endl;
     float t = 0;
     for (int i = l; i <= r; i++) {
         for (int j = l; j < i; j++) {
-            // using std::cout, std::fixed, std::setprecision, std::endl;
-            // cout << fixed << setprecision(0) << a[i] << ' ' << a[j] << endl;
             
             if (a[i] < a[j]) {
                 t = a[i];
@@ -57,10 +59,42 @@ void inserting_sort(float a[], int l, int r) {
                 }
                 a[j] = t;
                 
-                // print_array(a, 6, 0, 0);
+                // cout << fixed << setprecision(0) << a[i] << ' ' << a[j] << endl;
+                
+                // print_array(a, l, r, 0, 0);
             }
 
         }
+    }
+}
+
+/**
+ * Вариант реализации из книги
+ */
+void inserting_sort_from_book(float a[], int l, int r) {
+    // using std::cout, std::fixed, std::setprecision, std::endl;
+    
+    int i;
+    float t;
+    // Помещение наименьшего элемента массива на первую позицию
+    for (i = r; i > l; --i) {
+        if (a[i-1] > a[i]) {
+            t = a[i];
+            a[i] = a[i-1];
+            a[i-1] = t;
+        }
+    }
+    // print_array(a, l, r, 0, 0);
+    
+    for (i = l+2; i <= r; ++i) {
+        int j = i; float v = a[j];
+        while (v < a[j-1]) {
+            a[j] = a[j-1]; --j;
+        }
+        // cout << fixed << setprecision(0) << v << ' ' << a[j] << endl;
+        a[j]= v;
+        
+        // print_array(a, l, r, 0, 0);
     }
 }
 
@@ -150,11 +184,11 @@ void quick_sort(float a[], int l, int r) {
 void time_complexity_example() {
     float min = 0, max = 1024;
     
-    uint32_t s = 131072;
+    uint32_t s = 6000;
     float *a = new float[s];
     fill_array(a, s, min, max);
     
-    s = 131072;
+    // s = 131072;
     float *b = new float[s];
     fill_array(b, s, min, max);
     
@@ -166,8 +200,8 @@ void time_complexity_example() {
     // программы состоит в квазилинейной зависимости от количества элементов
     // quick_sort(), merge_sort()
 
-    run_with_time_measurement(a, s, quick_sort);
-    run_with_time_measurement(b, s, merge_sort);
+    run_with_time_measurement(a, s, inserting_sort);
+    run_with_time_measurement(b, s, inserting_sort_from_book);
 }
 
 void printing_example() {
@@ -175,18 +209,51 @@ void printing_example() {
     float min = 0, max = 1024;
     
     float *a = new float[s];
+    float *b = new float[s];
 
     fill_array(a, s, min, max);
+    fill_array(b, s, min, max);
+
+    print_array(a, 0, s-1, false, 0);
+    // quick_sort(a, 0, s-1);
+    // merge_sort(a, 0, s-1);
+    bubble_sort(a, 0, s-1);
+    // inserting_sort(a, 0, s-1);
+
+    std::cout << '\n' << std::endl;
     print_array(a, 0, s-1, false, 0);
 
-    quick_sort(a, 0, s-1);
+    // print_array(b, 0, s-1, false, 0);
+    // inserting_sort(b, 0, s-1);
     
-    print_array(a, 0, s-1, false, 0);
+}
+
+void comparison_example() {
+    using namespace std;
+
+    float f_1 = 1.5;
+    float f_2 = 1.49999999; // == f_1
+    float f_3 = 1.4999999; // != f_1
+
+    cout << boolalpha;
+    cout << "f_1 == f_2: " << (f_1 == f_2) << endl;
+    cout << "f_1 == f_3: " << (f_1 == f_3) << endl;
+    cout << "f_2 == f_3: " << (f_2 == f_3) << endl;
+
+    float my_epsilon = 0.000001;    
+    cout << fixed << setprecision(20) << f_2 - f_3 << '\n'
+         << "f_2 == f_3: " << (fabs(f_2 - f_3) < my_epsilon)
+         << endl;
+    cout << fixed << setprecision(20) << f_2 - f_3 << '\n'
+         << "f_2 == f_3: " << (fabs(f_2 - f_3) < __FLT_EPSILON__)
+         << endl;
+
 }
 
 int main() {
-    time_complexity_example();
+    // time_complexity_example();
     printing_example();
+    // comparison_example();
     
     return 0;
 }
