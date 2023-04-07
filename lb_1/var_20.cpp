@@ -29,6 +29,7 @@ double calculate_area(const double& r_0, const int& n) {
 // 2 задание
 /* arr[] это массив в котором надо приоизвести замену первых и последний с элементов */
 /* size это размер массива */
+// a = {0, 1, 2, 3, 4, 5}; c = 2
 void swap_elements(int arr[], const int& size, const int& c) {
     // По условию c < size / 2
     if (c >= size / 2) {
@@ -58,12 +59,53 @@ double f(const double& x, const double& y) {
     return (-93 / sin(y)) + (5 / x);
 }
 
+void uvelichenie(int& chislo) {
+    chislo += 1;
+}
+
+void primer() {
+    int g = 69;  // объявили переменную g
+    int* adres_g = &g;  // указатель. "&g" - взятие адреса
+    int& vtoroe_imya_g = g;  // ссылка на g
+    int ne_g = g;  // другая переменная
+    
+    g += 1; // g = 70, vtoroye_imya_g = 70
+    vtoroe_imya_g -= 1; // g = 69
+    adres_g -= 1; // g = 68
+
+    using namespace std;
+    int chislo = 69;
+    cout << chislo << endl; // выведем "результат" операции
+    int& vtoroe_imya = chislo;
+    uvelichenie(chislo);
+    cout << chislo << endl; // выведем "результат" операции
+
+    int* adres_chisla = &chislo;
+    cout << "Adres chisla: " << adres_chisla << " chislo" << *adres_chisla << endl;
+    cout << "Izmenenniy adres chisla: " << --adres_chisla << " to chto lezhit po etomu adresu" << *adres_chisla << endl;
+
+
+
+}
+
 int main() {
 
-    // Код проверяющий второе задание снизу
-    // int arr[] = {1, 2, 3, 4, 5, 6};
-    // print_array(arr, std::size(arr));
-    // swap_elements(arr, std::size(arr), 2);
-    // print_array(arr, std::size(arr));
+    primer();
+
+    // // Код проверяющий второе задание
+    // int radius_samogo_pervogo_shara = 4;
+    // int n = 2;
+    // int result = calculate_area(radius_samogo_pervogo_shara, 2);
+
+    // // Код проверяющий второе задание снизу
+    // using namespace std;
+    // int arr[] = {1, 2, 3, 4, 5, 6}; // мы создаем массив
+    
+    // print_array(arr, size(arr)); // мы его выводим на экран
+    // swap_elements(arr, size(arr), 2); // воздействуем на массив
+    // print_array(arr, size(arr)); // печатаем изменнённый массив
+
+    // // Код проверяющий третье задание
+    // double result = f(x(10), y(x(10), 10));
 
 }
