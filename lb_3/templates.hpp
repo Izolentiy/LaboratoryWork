@@ -1,3 +1,6 @@
+#pragma once
+#include "templates.h"
+
 template <typename T>
 T max(T a, T b) {
     if (a > b) return a;
@@ -11,39 +14,36 @@ T min(T a, T b) {
 }
 
 template <typename T>
-class Interval {
-public:
-    Interval(T start, T end) {
-        this -> start = start;
-        this -> end = end;
-    }
+Interval<T>::Interval(T start, T end) {
+    this.start = start;
+    this.end = end;
+}
 
-    T get_start() const {
-        return start;
-    }
+template <typename T>
+T Interval<T>::get_start() const
+{
+    return start;
+}
 
-    T get_end() const {
-        return end;
-    }
+template <typename T>
+T Interval<T>::get_end() const {
+    return end;
+}
 
-    T get_size() const {
-        return (end - start);
-    }
+template <typename T>
+T Interval<T>::get_size() const {
+    return end;
+}
 
-    void set_end(T end) {
-        this.end = end;
-    }
+template <typename T>
+void Interval<T>::set_end(T end) {
+    this.end = end;
+}
 
-    void get_end_nonconst() {}
-
-    Interval<T> intersection(const Interval<T>& other) const {
-        return Interval<T>(
-            max(start, other.start),
-            min(end, other.end)
-        );
-    }
-
-private:
-    T start;
-    T end;
-};
+template <typename T>
+Interval<T> Interval<T>::intersection(const Interval<T>& other) const {
+    return Interval<T>(
+        max(start, other.start),
+        min(end, other.end)
+    );
+}
