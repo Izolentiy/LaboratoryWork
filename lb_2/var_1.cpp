@@ -98,6 +98,25 @@ void inserting_sort_from_book(float a[], int l, int r) {
     }
 }
 
+void inserting_sort_reworked(float a[], int l, int r) {
+    float t;
+    int i, j;
+    for (i = r; i > l; --i) {
+        if (a[i] < a[i-1]) {
+            t = a[i];
+            a[i] = a[i-1];
+            a[i-1] = t;
+        }
+    }
+    for (i = l+2; i <= r; ++i) {
+        j = i; t = a[j];
+        while (t < a[j-1]) {
+            a[j] = a[j-1]; --j;
+        }
+        a[j] = t;
+    }
+}
+
 /**
  * Метод абстрактного обменного слияния
  * Реализация через массив со статическим классом памяти
@@ -159,8 +178,23 @@ void exchange(float a[], int i, int j) {
     a[i] = a[j]; a[j] = t;
 }
 
+#define SPECIAL_SIZE 8
+
+void special_print(float a[], int l, int r, int s) {
+    std::cout << "{ ";
+    for (int i = 0; i < s; ++i) {
+        if (i >= l && i <= r) std::cout << a[i] << ' ';
+        else std::cout << "  ";
+    }
+    std::cout << '}';
+}
+
 int partition(float a[], int l, int r) {
     int i = l, j = r - 1;
+
+    special_print(a, l, r, SPECIAL_SIZE);
+    std::cout << std::endl;
+
     while (true) {
         for (i; a[i] < a[r]; i++);
         for (j; a[j] > a[r]; j--);
@@ -170,6 +204,10 @@ int partition(float a[], int l, int r) {
     }
     exchange(a, i, r);
     // print_array(a, l, r, 0, 0);
+    // print_array(a, 0, 8-1, 0, 0);
+    
+    special_print(a, l, r, SPECIAL_SIZE);
+    std::cout << "; elements < " << a[i] << ": " << i - l << std::endl;
     return i;
 }
 
@@ -184,7 +222,7 @@ void quick_sort(float a[], int l, int r) {
 void time_complexity_example() {
     float min = 0, max = 1024;
     
-    uint32_t s = 6000;
+    uint32_t s = 24000;
     float *a = new float[s];
     fill_array(a, s, min, max);
     
@@ -200,13 +238,20 @@ void time_complexity_example() {
     // программы состоит в квазилинейной зависимости от количества элементов
     // quick_sort(), merge_sort()
 
-    run_with_time_measurement(a, s, inserting_sort);
+    float *c = new float[s];
+    fill_array(c, s, min, max);
+
+    print_array(a, 0, 5, 0, 0);
+    print_array(b, 0, 5, 0, 0);
+
+    run_with_time_measurement(c, s, merge_sort);
     run_with_time_measurement(b, s, inserting_sort_from_book);
+    run_with_time_measurement(a, s, inserting_sort_from_book);
 }
 
 void printing_example() {
-    uint16_t s = 6;
-    float min = 0, max = 1024;
+    uint16_t s = SPECIAL_SIZE;
+    float min = 0, max = 9;
     
     float *a = new float[s];
     float *b = new float[s];
@@ -217,8 +262,8 @@ void printing_example() {
     print_array(a, 0, s-1, false, 0);
     // quick_sort(a, 0, s-1);
     // merge_sort(a, 0, s-1);
-    bubble_sort(a, 0, s-1);
-    // inserting_sort(a, 0, s-1);
+    // bubble_sort(a, 0, s-1);
+    inserting_sort_reworked(a, 0, s-1);
 
     std::cout << '\n' << std::endl;
     print_array(a, 0, s-1, false, 0);
@@ -251,8 +296,8 @@ void comparison_example() {
 }
 
 int main() {
-    // time_complexity_example();
-    printing_example();
+    time_complexity_example();
+    // printing_example();
     // comparison_example();
     
     return 0;
