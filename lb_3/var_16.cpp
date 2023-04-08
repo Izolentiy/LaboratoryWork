@@ -1,14 +1,36 @@
 #include "utils.cpp"
 
+void move_points_and_set_vector(
+    my::vector& v, my::point& s, my::point& e, 
+    const float& x, const float& y
+) {
+    s.move(v); // перемещение точки начала в конец
+    v.set(x, y); // установка нового вектора перемещения
+    e.move(v); // перемещение точки конца в новое положение
+}
+
 void task_1(int **m, int r, int c) {
     print_matrix(m, r, c);
-    if (r % 2 == 0) {
-        std::cout << "Matrix is invalid!" << std::endl;
-        return;
+
+    int i = r;
+    my::point s(0, -1), e(0, r-1); // точка начала смещена вверх на 1
+    my::vector v(0, i); // изначально вектор направлен вниз
+    while (i > 0) {
+        print_elements_between(m, s, e); // печать вниз
+        move_points_and_set_vector(v, s, e, --i, 0);
+        if (i <= 0) break;
+        
+        print_elements_between(m, s, e); // печать вправо
+        move_points_and_set_vector(v, s, e, 0, -i);
+        
+        print_elements_between(m, s, e); // печать вверх
+        move_points_and_set_vector(v, s, e, -(--i), 0);
+
+        print_elements_between(m, s, e); // печать влево
+        move_points_and_set_vector(v, s, e, 0, i);
     }
+    
     my::point s(0, 0), e(r-1, r-1);
-    s.print_coordinates();
-    e.print_coordinates();
     print_elements_between(m, s, e);
 
 }
@@ -30,6 +52,6 @@ void task_2(int **m, int r, int c) {
 }
 
 int main() {
-    perform_task(5, 5, 1, task_1);
+    perform_task(7, 7, 1, task_1);
     // perform_task(3, 3, 2, task_2);
 }

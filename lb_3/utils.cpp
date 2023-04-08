@@ -125,12 +125,14 @@ public:
     float x; float y;
     float l;
 
-    void print_coordinates() {
-        std::cout << "vector = {" << x << ", " << y << "}" << std::endl;
+    void set(float x, float y) {
+        this -> x = x;
+        this -> y = y;
+        l = sqrt(x*x + y*y);
     }
 
-    bool is_zero() const {
-        return x == y == 0;
+    void print_coordinates() {
+        std::cout << "vector = {" << x << ", " << y << "}" << std::endl;
     }
 
     vector get_ort() const {
@@ -161,9 +163,6 @@ public:
         y += v.y;
     }
 
-    point get_shifted_copy(const my::vector& v) {
-        return point(x + v.x, y + v.y);
-    }
 };
 
 /**
@@ -182,7 +181,12 @@ void print_elements_between(T **m, my::point p_1, my::point p_2) {
     for (int i = 0; i < v.l; ++i) {
         int r = p_1.y += v_0.y;
         int c = p_1.x += v_0.x;
-        std::cout << m[r][c] << " [" << r << ", " << c << "]" << std::endl;
+        if (pr_r != r || pr_c != c) {
+            // std::cout << m[r][c] << ' ';
+            std::cout << m[r][c] << " [" << r << ", " << c << "]  ";
+        }
+        pr_r = r; pr_c = c;
     }
+    std::cout << std::endl;
 
 }
