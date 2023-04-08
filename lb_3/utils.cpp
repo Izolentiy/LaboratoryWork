@@ -108,3 +108,81 @@ void print_array(T arr[], int l, int r, bool vert = false, int prec = 2) {
     }
     cout << '}' << endl;
 }
+
+namespace my {
+    class point;
+    class vector;
+}
+
+class my::vector {
+public:
+    vector(float x, float y) {
+        this -> x = x;
+        this -> y = y;
+        l = sqrt(x*x + y*y);
+    };
+
+    float x; float y;
+    float l;
+
+    void print_coordinates() {
+        std::cout << "vector = {" << x << ", " << y << "}" << std::endl;
+    }
+
+    bool is_zero() const {
+        return x == y == 0;
+    }
+
+    vector get_ort() const {
+        return vector(x/l, y/l);
+    }
+};
+
+class my::point {
+public:
+    point(const point& other) {
+        this -> x = other.x;
+        this -> y = other.y;
+    }
+
+    point(float x, float y) {
+        this -> x = x;
+        this -> y = y;
+    }
+    
+    float x; float y;
+    
+    void print_coordinates() {
+        std::cout << "(" << x << ", " << y << ")" << std::endl;  
+    }
+    
+    void move(const my::vector& v) {
+        x += v.x;
+        y += v.y;
+    }
+
+    point get_shifted_copy(const my::vector& v) {
+        return point(x + v.x, y + v.y);
+    }
+};
+
+/**
+ * Печатает элементы лежащие между точками на матрице
+ */
+template <typename T>
+void print_elements_between(T **m, my::point p_1, my::point p_2) {
+    my::vector v(p_2.x - p_1.x, p_2.y - p_1.y);
+    my::vector v_0 = v.get_ort();
+
+    v.print_coordinates();
+    std::cout << "ort ";
+    v_0.print_coordinates();
+    
+    int pr_r, pr_c;
+    for (int i = 0; i < v.l; ++i) {
+        int r = p_1.y += v_0.y;
+        int c = p_1.x += v_0.x;
+        std::cout << m[r][c] << " [" << r << ", " << c << "]" << std::endl;
+    }
+
+}
