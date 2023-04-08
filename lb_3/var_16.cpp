@@ -30,9 +30,43 @@ void task_1(int **m, int r, int c) {
         move_points_and_set_vector(v, s, e, 0, i);
     }
     
-    my::point s(0, 0), e(r-1, r-1);
-    print_elements_between(m, s, e);
+    // my::point s(0, 0), e(r-1, r-1);
+    // print_elements_between(m, s, e);
 
+}
+
+void task_1_simple(int **m, int r, int c) {
+    print_matrix(m, r, c);
+    int mg = 0;
+    int cl = r/2;
+    while (cl > 0) {
+        // печать вниз
+        for (int i = mg; i < r-1-mg; ++i) {
+            std::cout << m[i][mg] << ' ';
+        }
+        std::cout << std::endl;
+        
+        // печать вправо
+        for (int i = mg; i < r-1-mg; ++i) {
+            std::cout << m[r-1-mg][i] << ' ';
+        }
+        std::cout << std::endl;
+
+        // печать вверх
+        for (int i = r-1-mg; i > mg; --i) {
+            std::cout << m[i][r-1-mg] << ' ';
+        }
+        std::cout << std::endl;
+
+        // печать влево
+        for (int i = r-1-mg; i > mg; --i) {
+            std::cout << m[mg][i] << ' ';
+        }
+        std::cout << std::endl;
+        ++mg; --cl;
+    }
+    uint16_t i = r/2 + 1;
+    std::cout << m[i][i] << std::endl;
 }
 
 void task_2(int **m, int r, int c) {
@@ -52,6 +86,7 @@ void task_2(int **m, int r, int c) {
 }
 
 int main() {
-    perform_task(7, 7, 1, task_1);
+    // perform_task(7, 7, 1, task_1);
+    perform_task(5, 5, 1, task_1_simple);
     // perform_task(3, 3, 2, task_2);
 }

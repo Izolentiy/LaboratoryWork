@@ -173,17 +173,17 @@ void print_elements_between(T **m, my::point p_1, my::point p_2) {
     my::vector v(p_2.x - p_1.x, p_2.y - p_1.y);
     my::vector v_0 = v.get_ort();
 
-    v.print_coordinates();
-    std::cout << "ort ";
-    v_0.print_coordinates();
+    // v.print_coordinates();
+    // std::cout << "ort ";
+    // v_0.print_coordinates();
     
     int pr_r, pr_c;
     for (int i = 0; i < v.l; ++i) {
         int r = p_1.y += v_0.y;
         int c = p_1.x += v_0.x;
         if (pr_r != r || pr_c != c) {
-            // std::cout << m[r][c] << ' ';
-            std::cout << m[r][c] << " [" << r << ", " << c << "]  ";
+            std::cout << m[r][c] << ' ';
+            // std::cout << m[r][c] << " [" << r << ", " << c << "]  ";
         }
         pr_r = r; pr_c = c;
     }
