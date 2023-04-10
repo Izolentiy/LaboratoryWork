@@ -1,5 +1,7 @@
 #include "templates.h"
 #include <iostream>
+#include "matrix.h"
+#include <unistd.h>
 
 int global_var;
 
@@ -17,18 +19,35 @@ void two_dim_array() {
     int r = 3, c = 3;
     int *a = new int[r*c];
     
+    // Заполнение массива
     for (int i = 0; i < r*c; ++i) {
         a[i] = i+1;
         std::cout << a[i] << ' ';
-        if (i % c == 2) std::cout << '\n'; 
+        if (i % c == c-1) std::cout << '\n'; 
     }
 
-    std::cout << '\n';
+    std::cout << '\n"One dimensional array as matrix';
     std::cout << get_elem(a, c, 0, 1) << '\n';
     std::cout << get_elem(a, c, 1, 2) << '\n';
     std::cout << get_elem(a, c, 2, 1) << '\n';
 
+    my::matrix<int> m(r, c);
+    m.fill();
+    std::cout << "\nCustom matrix class" << '\n';
+    std::cout << m(0, 1) << '\n';
+    std::cout << m(1, 2) << '\n';
+    std::cout << m(2, 1) << '\n';
+
     delete[] a;
+}
+
+void console_output() {
+    std::cout << "Completed ";
+    for (int i = 0; i <= 100; i += 10) {
+        sleep(1);
+        std::cout << "\b\b\b" << i << "%" << std::flush;
+    }
+    std::cout << "\nDone" << std::endl;
 }
 
 int main() {
@@ -36,7 +55,8 @@ int main() {
     // Константный указатель с неизменяемым значением по адресу
     // const Interval<int> * const j = new Interval(2, 6);
     // const Interval<int>& k = i;
+
     // const_ref_example(i, 8);
-    
     two_dim_array();
+    // console_output();
 }
