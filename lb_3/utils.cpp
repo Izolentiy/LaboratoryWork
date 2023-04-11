@@ -1,6 +1,7 @@
 #include <iostream>
 #include <random>
 #include <iomanip>
+#include <matrix.h>
 
 #define MIN_VAL 0
 #define MAX_VAL 9
@@ -108,62 +109,6 @@ void print_array(T arr[], int l, int r, bool vert = false, int prec = 2) {
     }
     cout << '}' << endl;
 }
-
-namespace my {
-    class point;
-    class vector;
-}
-
-class my::vector {
-public:
-    vector(float x, float y) {
-        this -> x = x;
-        this -> y = y;
-        l = sqrt(x*x + y*y);
-    };
-
-    float x; float y;
-    float l;
-
-    void set(float x, float y) {
-        this -> x = x;
-        this -> y = y;
-        l = sqrt(x*x + y*y);
-    }
-
-    void print_coordinates() {
-        std::cout << "vector = {" << x << ", " << y << "}" << std::endl;
-    }
-
-    vector get_ort() const {
-        return vector(x/l, y/l);
-    }
-};
-
-class my::point {
-public:
-    point(const point& other) {
-        this -> x = other.x;
-        this -> y = other.y;
-    }
-
-    point(float x, float y) {
-        this -> x = x;
-        this -> y = y;
-    }
-    
-    float x; float y;
-    
-    void print_coordinates() {
-        std::cout << "(" << x << ", " << y << ")" << std::endl;  
-    }
-    
-    void move(const my::vector& v) {
-        x += v.x;
-        y += v.y;
-    }
-
-};
 
 /**
  * Печатает элементы лежащие между точками на матрице

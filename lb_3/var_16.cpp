@@ -1,4 +1,5 @@
 #include "utils.cpp"
+#include "matrix.h"
 
 void move_points_and_set_vector(
     my::vector& v, my::point& s, my::point& e, 
@@ -29,10 +30,6 @@ void task_1(int **m, int r, int c) {
         print_elements_between(m, s, e); // печать влево
         move_points_and_set_vector(v, s, e, 0, i);
     }
-    
-    // my::point s(0, 0), e(r-1, r-1);
-    // print_elements_between(m, s, e);
-
 }
 
 void task_1_simple(int **m, int r, int c) {
@@ -72,7 +69,7 @@ void task_1_simple(int **m, int r, int c) {
 void task_2(int **m, int r, int c) {
     print_matrix(m, r, c);
     for (int i = 0; i < r/2; ++i) {
-        for (int j = 0; j < i+1; ++j) {
+        for (int j = 0; j <= i; ++j) {
             m[i][j] = 0;
             m[i][r-1-j] = 0;
         }
@@ -85,8 +82,26 @@ void task_2(int **m, int r, int c) {
     print_matrix(m, r, c);
 }
 
+void task_2_another(int **m, int r, int c) {
+    print_matrix(m, r, c);
+    int k = c/2;
+    for (int i = 0; i < k; ++i) {
+        for (int j = r-1; j >= i; --j) {
+            m[j][i] = 0;
+            m[j][c-1-i] = 0;
+        }
+    }
+    if (c % 2 != 0) {
+        for (int j = r-1; j >= k; --j) {
+            m[j][k] = 0;
+        }
+    }
+    print_matrix(m, r, c);
+}
+
 int main() {
     // perform_task(7, 7, 1, task_1);
-    perform_task(5, 5, 1, task_1_simple);
+    perform_task(5, 5, 1, task_2);
+    perform_task(5, 5, 2, task_2_another);
     // perform_task(3, 3, 2, task_2);
 }

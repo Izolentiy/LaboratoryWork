@@ -26,23 +26,24 @@ void two_dim_array() {
         if (i % c == c-1) std::cout << '\n'; 
     }
 
-    std::cout << '\n"One dimensional array as matrix';
+    std::cout << "\nOne dimensional array as matrix\n";
     std::cout << get_elem(a, c, 0, 1) << '\n';
     std::cout << get_elem(a, c, 1, 2) << '\n';
     std::cout << get_elem(a, c, 2, 1) << '\n';
 
+    delete[] a;
+
     my::matrix<int> m(r, c);
     m.fill();
-    std::cout << "\nCustom matrix class" << '\n';
+    std::cout << "\nCustom matrix class\n";
+    m(0, 1) = 9;
     std::cout << m(0, 1) << '\n';
     std::cout << m(1, 2) << '\n';
     std::cout << m(2, 1) << '\n';
-
-    delete[] a;
 }
 
 void console_output() {
-    std::cout << "Completed ";
+    std::cout << "Completed    ";
     for (int i = 0; i <= 100; i += 10) {
         sleep(1);
         std::cout << "\b\b\b" << i << "%" << std::flush;
