@@ -17,7 +17,7 @@ void my::vector::set(const float& x, const float& y) {
 }
 
 void my::vector::print_coordinates() const {
-    std::cout << "vector = {" << get_x << ", " << get_y << "}" << std::endl;
+    std::cout << "vector = {" << get_x() << ", " << get_y() << "}" << std::endl;
 }
 
 my::vector my::vector::get_ort() const {

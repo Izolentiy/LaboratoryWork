@@ -1,7 +1,9 @@
+#pragma once
+
 #include <iostream>
 #include <random>
 #include <iomanip>
-#include <matrix.h>
+#include "matrix.h"
 
 #define MIN_VAL 0
 #define MAX_VAL 9
@@ -115,7 +117,7 @@ void print_array(T arr[], int l, int r, bool vert = false, int prec = 2) {
  */
 template <typename T>
 void print_elements_between(T **m, my::point p_1, my::point p_2) {
-    my::vector v(p_2.x - p_1.x, p_2.y - p_1.y);
+    my::vector v(p_2.get_x() - p_1.get_x(), p_2.get_y() - p_1.get_y());
     my::vector v_0 = v.get_ort();
 
     // v.print_coordinates();
@@ -123,9 +125,10 @@ void print_elements_between(T **m, my::point p_1, my::point p_2) {
     // v_0.print_coordinates();
     
     int pr_r, pr_c;
-    for (int i = 0; i < v.l; ++i) {
-        int r = p_1.y += v_0.y;
-        int c = p_1.x += v_0.x;
+    for (int i = 0; i < v.get_l(); ++i) {
+        int r = p_1.get_y() + v_0.get_y();
+        int c = p_1.get_x() + v_0.get_x();
+        p_1.set(c, r);
         if (pr_r != r || pr_c != c) {
             std::cout << m[r][c] << ' ';
             // std::cout << m[r][c] << " [" << r << ", " << c << "]  ";

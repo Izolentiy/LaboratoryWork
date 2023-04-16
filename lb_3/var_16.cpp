@@ -1,4 +1,4 @@
-#include "utils.cpp"
+#include "utils.hpp"
 #include "matrix.h"
 
 void move_points_and_set_vector(
@@ -64,6 +64,7 @@ void task_1_simple(int **m, int r, int c) {
     }
     uint16_t i = r/2 + 1;
     std::cout << m[i][i] << std::endl;
+    std::cout << "margin: " << mg << '\n';
 }
 
 void task_2(int **m, int r, int c) {
@@ -100,8 +101,9 @@ void task_2_another(int **m, int r, int c) {
 }
 
 int main() {
-    // perform_task(7, 7, 1, task_1);
+    perform_task(5, 5, 1, task_1);
+    // perform_task(7, 7, 1, task_1_simple);
     perform_task(5, 5, 1, task_2);
-    perform_task(5, 5, 2, task_2_another);
+    // perform_task(5, 5, 2, task_2_another);
     // perform_task(3, 3, 2, task_2);
 }

@@ -1,4 +1,4 @@
-#include "utils.cpp"
+#include "utils.hpp"
 
 void task_1(int** matrix, int m, int n) {
     int* set = new int[m];

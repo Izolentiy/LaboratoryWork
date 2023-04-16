@@ -1,4 +1,4 @@
-#include "utils.cpp"
+#include "utils.hpp"
 
 void task_1(int **m, int r, int c) {
     print_matrix(m, r, c);
