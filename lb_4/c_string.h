@@ -1,6 +1,5 @@
 #pragma once
 #include <stdint.h>
-#include <cmath>
 
 namespace my {
   class string;
@@ -8,12 +7,12 @@ namespace my {
 
 class my::string {
 public:
-  string(uint16_t s); // s - size не считая нуль-терминатора
+  string(uint16_t); // принимает size не считая нуль-терминатора
   char* as_cstring();
   char* as_new_cstring();
-  string& operator + (const char *other);
-  string& operator + (char ch);
-  string& operator + (int num);
+  string& operator + (const char *);
+  string& operator + (char);
+  string& operator + (int);
   void clear();
   ~string();
 

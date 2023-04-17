@@ -1,3 +1,4 @@
+#include <cmath>
 #include "c_string.h"
 
 my::string::string(uint16_t size) {
@@ -8,7 +9,8 @@ my::string::string(uint16_t size) {
 
 /**
  * !Память будет очищена после вызова деструктора!
- * Если нужен экз
+ * Если нужен массив, который переживет экземпляр,
+ * использовать as_new_cstring()
  */
 char *my::string::as_cstring() {
   return data;
