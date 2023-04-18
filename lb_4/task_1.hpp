@@ -2,6 +2,7 @@
 #include <fstream>
 #include <iostream>
 #include <random>
+#include <cmath>
 
 #include "str_utils.hpp"
 
@@ -11,12 +12,13 @@ namespace task_1 {
   void subtask_1(std::ifstream &, std::ofstream &);
   void subtask_2(std::ifstream &, std::ofstream &);
   void subtask_3(std::ifstream &, std::ofstream &);
-  // void subtask_4(std::ifstream &, std::ofstream &);
-  // void subtask_5(std::ifstream &, std::ofstream &);
+  void subtask_4(std::ifstream &, std::ofstream &);
+  void subtask_5(std::ifstream &, std::ofstream &);
+
+  char random_letter(char, char);
   
   subtask_t subtasks[] = {
-    subtask_1, subtask_2, subtask_3
-    // subtask_1, subtask_2, subtask_3, subtask_4, subtask_5
+    subtask_1, subtask_2, subtask_3, subtask_4, subtask_5
   };
 }
 
@@ -49,7 +51,7 @@ void task_1::subtask_1(std::ifstream &fin, std::ofstream &fout) {
  */
 void task_1::subtask_2(std::ifstream &fin, std::ofstream &fout) {
   char str[13] = "";
-  fin.getline(str, 12, '\n');
+  fin.getline(str, 13);
 
   size_t len = str_len(str);
   if (len > 10) str[6] = '\0';
@@ -61,8 +63,6 @@ void task_1::subtask_2(std::ifstream &fin, std::ofstream &fout) {
   fout << str;
 }
 
-char random_alphabet_char(char, char);
-
 /**
  * Дана строка. Разделить строку на фрагменты по три подряд идущих
  * символа. В каждом фрагменте средний символ заменить на случайный
@@ -73,16 +73,39 @@ void task_1::subtask_3(std::ifstream &fin, std::ofstream &fout) {
 
   size_t str_size = 0;
   char ch = fin.get();
-  while (ch != EOF || ch != '\n') {
-    fin >> ch; ++str_size;
+  while (ch != EOF) {
+    ch = fin.get(); ++str_size;
+    if (ch == '\n') break;
   }
 
+  fin.clear();
   fin.seekg(std::ios::beg);
 
   char buff[4] = "";
-  char max_ch;
-  fin.getline(buff, 3, '\n');
+  char max_ch = CHAR_MIN;
+  for (size_t i = 0; i < str_size / 3; ++i) {
+    fin.getline(buff, 4).clear();
+    buff[1] = random_letter(buff[0], buff[2]);
+
+    if (buff[1] >= max_ch) {
+      fout << buff;
+      max_ch = buff[1];
+    } else {
+      fout << "=+-"; // для наглядности
+    }
+  }
 }
+
+/**
+ * Дана строка. Заменить каждый четный символ или на 'a', если символ
+ * не равен 'a' или 'b', или на 'c' в противном случае.
+ */
+void task_1::subtask_4(std::ifstream &fin, std::ofstream &fout) {}
+
+/**
+ * В данной строке найти количество цифр
+ */
+void task_1::subtask_5(std::ifstream &fin, std::ofstream &fout) {}
 
 #define ASCII_A_LOW 97
 #define ASCII_Z_LOW 122
@@ -90,7 +113,7 @@ void task_1::subtask_3(std::ifstream &fin, std::ofstream &fout) {
  * @param exl exclude left
  * @param exr exclude right
  */
-char random_alphabet_char(char exl, char exr) {
+char task_1::random_letter(char exl, char exr) {
   std::random_device dev;
   std::uniform_int_distribution dist(ASCII_A_LOW, ASCII_Z_LOW);
 
