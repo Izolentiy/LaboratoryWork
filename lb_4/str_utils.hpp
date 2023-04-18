@@ -7,3 +7,9 @@ bool str_cmp(char *s_1, const char *s_2) {
   }
   return false;
 }
+
+size_t str_len(char *s) {
+  size_t i = 0;
+  while (s[i] != '\0') ++i;
+  return i;
+}

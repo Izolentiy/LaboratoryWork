@@ -9,21 +9,16 @@
 typedef subtask_t *task_t;
 task_t tasks[] = { task_1::subtasks, task_2::subtasks };
 
-void input_filename(my::string&, uint8_t, uint8_t);
-void output_filename(my::string&, uint8_t, uint8_t);
+char *input_filename(my::string&, uint8_t, uint8_t);
+char *output_filename(my::string&, uint8_t, uint8_t);
 
 void run_task(uint8_t tn, uint8_t stn) {
-  using std::ifstream, std::ofstream;
+  static my::string fname(64);
+  static std::ifstream fin;
+  static std::ofstream fout;
 
-  my::string fname(64);
-  
-  // Открытие файла для чтения
-  input_filename(fname, tn, stn);
-  ifstream fin(fname.as_cstring());
-
-  // Открытие файла для записи
-  output_filename(fname, tn, stn);
-  ofstream fout(fname.as_cstring());
+  fin.open(input_filename(fname, tn, stn));
+  fout.open(output_filename(fname, tn, stn));
 
   std::cout << "### Task " << (int)tn << '.' << (int)stn << " ###\n";
 
@@ -37,12 +32,14 @@ void run_task(uint8_t tn, uint8_t stn) {
   fout.close();
 }
 
-void input_filename(my::string& fname, uint8_t tn, uint8_t stn) {
+char *input_filename(my::string& fname, uint8_t tn, uint8_t stn) {
   fname.clear();
   fname + "input\\task_" + tn + "\\in_" + tn + '_' + stn + ".txt";
+  return fname.as_cstring();
 }
 
-void output_filename(my::string& fname, uint8_t tn, uint8_t stn) {
+char *output_filename(my::string& fname, uint8_t tn, uint8_t stn) {
   fname.clear();
   fname + "output\\task_" + tn + "\\out_" + tn + '_' + stn + ".txt";
+  return fname.as_cstring();
 }
