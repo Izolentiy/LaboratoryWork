@@ -5,6 +5,7 @@
 
 #include "char_set.h"
 #include "task_typedefs.h"
+#include "str_utils.h"
 
 namespace task_2 {
   void subtask_1(std::ifstream &, std::ofstream &);
@@ -12,9 +13,6 @@ namespace task_2 {
   void subtask_3(std::ifstream &, std::ofstream &);
   void subtask_4(std::ifstream &, std::ofstream &);
   void subtask_5(std::ifstream &, std::ofstream &);
-
-  bool is_digit(char);
-  int32_t parse_from_str(char *, bool, uint8_t);
   
   subtask_t subtasks[] = {
     subtask_1, subtask_2, subtask_3, subtask_4, subtask_5
@@ -90,15 +88,15 @@ void task_2::subtask_4(std::ifstream &fin, std::ofstream &fout) {}
  * и сумму чисел, которые образуют эти слова.
  */
 void task_2::subtask_5(std::ifstream &fin, std::ofstream &fout) {
+  using namespace my;
   char ch = fin.get();
-  std::cout << "subtask 5 " << ch << "\n";
 
   int32_t num = 0;
   int64_t sum = 0;
   bool is_neg = false;
   char num_s[32] = "";
   uint8_t dc = 0; // digit count
-  
+
   while (ch != EOF) {
     if (ch == '-') is_neg = true;
     else
@@ -113,33 +111,7 @@ void task_2::subtask_5(std::ifstream &fin, std::ofstream &fout) {
       dc = 0; is_neg = false;
     }
     else is_neg = false;
-    std::cout << ch;
     ch = fin.get();
   }
   fout << "\nSum = " << sum;
-}
-
-bool task_2::is_digit(char ch) {
-  if ('0' <= ch && ch <= '9') return true;
-  return false;
-}
-
-/**
- * 12345 =
- * 10000 +
- *  2000 +
- *   300 +
- *    40 +
- *     5
- * digit_count = 5 // dc
- */
-int32_t task_2::parse_from_str(char *str, bool is_neg, uint8_t dc) {
-  int32_t res = 0;
-  uint8_t cur = 0;
-  for (uint8_t i = 0; str[i] != '\0'; ++i) {
-    cur = str[i] - '0';
-    res += cur * std::pow(10, --dc);
-  }
-  if (is_neg) res = ~res + 1;
-  return res;
 }
