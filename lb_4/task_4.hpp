@@ -12,9 +12,11 @@ namespace task_4 {
   void subtask_3(std::ifstream &, std::ofstream &);
   void subtask_4(std::ifstream &, std::ofstream &);
   void subtask_5(std::ifstream &, std::ofstream &);
+  void subtask_6(std::ifstream &, std::ofstream &);
+  void subtask_7(std::ifstream &, std::ofstream &);
+  void subtask_8(std::ifstream &, std::ofstream &);
 
   bool is_email_correct(std::string &);
-  bool is_email_forbid(const char);
   bool is_delim(const char);
 
   subtask_t subtasks[] = {
@@ -94,8 +96,11 @@ void task_4::subtask_5(std::ifstream &fin, std::ofstream &fout) {
 
 bool task_4::is_email_correct(std::string &str) {
   // проверка на отстсутствие некорректных символов
+  const char forbid[] = R"(;:*,&^%$#+=()'"!?`~<>/\)";
   for (size_t i = 0; i < str.size(); ++i) {
-    if (is_email_forbid(str[i])) return false;
+    for (uint8_t j = 0; forbid[j] != '\0'; ++i) {
+      if (str[i] == forbid[j]) return false;
+    }
   }
 
   // наличие @ в единственном экземпляре
@@ -112,25 +117,61 @@ bool task_4::is_email_correct(std::string &str) {
   size_t dot_pos = str.find('.', at_pos);
   if (dot_pos == std::string::npos) return false;
 
-  size_t dom_lvl_len = 0; // domain level length
+  size_t dll = 0; // domain level length
   for (size_t i = at_pos+1; i < str.size(); ++i) {
     if (str[i] == '.') {
-      if (dom_lvl_len < 2) break;
-      dom_lvl_len = 0; continue;
+      if (dll < 2) break;
+      dll = 0; continue;
     }
-    ++dom_lvl_len;
+    ++dll;
   }
-  if (dom_lvl_len < 2) return false;
-  std::cout << dom_lvl_len;
+  if (dll < 2) return false;
+  std::cout << dll;
   return true;
 }
 
-bool task_4::is_email_forbid(const char ch) {
-  /*static?*/ const char forbid[] = R"(;:*,&^%$#+=()'"!?`~<>/\)";
-  for (uint8_t i = 0; forbid[i] != '\0'; ++i) {
-    if (ch == forbid[i]) return true;
+void task_4::subtask_6(std::ifstream &fin, std::ofstream &fout) {}
+void task_4::subtask_7(std::ifstream &fin, std::ofstream &fout) {}
+
+/**
+ * Вывести слова, в которых заменить каждую большую букву одноименной малой; 
+ * удалить все символы, не являющиеся буквами или цифрами; 
+ * вывести в алфавитном порядке все гласные буквы,
+ * входящие в каждое слово строки.
+ */
+void task_4::subtask_8(std::ifstream &fin, std::ofstream &fout) {
+  std::string str, str_res;
+  if (!getline(fin, str)) return;
+
+  // отбор нужных символов
+  my::char_set pfv(6), cfv(6); // found vowels in prev/curr word
+  char c; // current char
+  bool wc = true; // word continues
+  size_t wsc = 0; // whitespace count
+  for (size_t i = 0; i < str.size(); ++i) {
+    c = str[i];
+    if ('A' <= c && c <= 'Z') 
+      c += 32; // 'a' = 97, 'A' = 65
+    else if ('a' <= c && c <= 'z');
+    else if ('0' <= c && c <= '9');
+    else if (c == ' ') {
+      wc = false;
+      if (++wsc <= 1) {
+        str_res.push_back(c);
+      }
+      continue;
+    } else continue;
+
+    // запоминание всех гласных букв
+    if (my::is_vowel(c));
+    wsc = 0;
+    str_res.push_back(c);
   }
-  return false;
+
+  // подсчет гласных букв и вывод в алфавитном порядке
+  for (size_t i = 0; i < str_res.size(); ++i) {
+
+  }
 }
 
 bool task_4::is_delim(const char ch) {
