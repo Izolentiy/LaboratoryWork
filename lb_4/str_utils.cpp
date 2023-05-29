@@ -23,6 +23,25 @@ size_t my::count(char *s, char c) {
   return r;
 }
 
+size_t my::count_diff(char *str_1, char *str_2) {
+  size_t i = 0, diffs = 0;
+  while (str_1[i] != '\0') {
+    if (str_2[i] == '\0') {
+      do {
+        ++i; ++diffs;
+      }
+      while (str_1[i] != '\0');
+      return diffs;
+    }
+    if (str_1[i] != str_2[i]) ++diffs;
+    ++i;
+  }
+  while (str_2[i] != '\0') {
+    ++i; ++diffs;
+  }
+  return diffs;
+}
+
 /**
  * Удаление символа из строки (нужно подумать над улучшением алгоритма)
  */
@@ -38,10 +57,28 @@ void my::remove_all(char *s, char c) {
   } while (i-- > 0);
 }
 
-
+/**
+ * Удаляет вхождение второй строки в первую
+ */
+void my::remove(char *, char *) {}
 
 bool my::is_digit(char ch) {
   if ('0' <= ch && ch <= '9') return true;
+  return false;
+}
+
+bool my::is_letter(char ch) {
+  bool is_low = 'a' <= ch && ch <= 'z';
+  bool is_up = 'A' <= ch && ch <= 'Z';
+  if (is_low || is_up) return true;
+  return false;
+}
+
+bool my::is_vowel(char ch) {
+  const char vowels[] = "aeiou";
+  for (uint8_t i = 0; vowels[i] != '\0'; ++i) {
+    if (vowels[i] == ch) return true;
+  }
   return false;
 }
 
