@@ -4,8 +4,7 @@
 #include <string>
 
 #include "str_utils.h"
-
-typedef void (*subtask_t) (std::ifstream &, std::ofstream &);
+#include "task_typedefs.h"
 
 namespace task_3 {
   void subtask_1(std::ifstream &, std::ofstream &);
@@ -31,6 +30,7 @@ void task_3::subtask_1(std::ifstream &fin, std::ofstream &fout) {
   fin.seekg(0, std::ios::end);
   str.resize(fin.tellg());
   fin.seekg(0, std::ios::beg);
+  fin.read(&str[0], str.size());
   fin.read(&str[0], str.size());
   try {
     fc = str.find(','); // поиск позиции первой запятой
@@ -81,12 +81,11 @@ void task_3::subtask_5(std::ifstream &fin, std::ofstream &fout) {
 
   // Для каждого символа встречающегося 1 раз во второй строке
   // анализ первой строки на наличие хотя бы одного такого же.
-  std::cout << str_2_p.size() << ' ' << str_2_p << '\n';
   size_t l = my::str_len(&str_2_p[0]);
   for (size_t i = 0; i < l; ++i) {
     c = my::count(&str_1[0], str_2_p[i]);
     if (c == 0) {
-      fout << "-_-Impossible";
+      fout << "-_- Impossible";
       return;
     }
   }

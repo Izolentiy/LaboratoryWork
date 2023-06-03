@@ -5,6 +5,7 @@
 
 #include "str_utils.h"
 #include "task_typedefs.h"
+#include "char_set.h"
 
 namespace task_4 {
   void subtask_1(std::ifstream &, std::ofstream &);
@@ -41,7 +42,7 @@ void task_4::subtask_1(std::ifstream &fin, std::ofstream &fout) {
 
   size_t pos_e = str_1.length();
   size_t pos_s = pos + str_2.length();
-  std::cout << str_1.substr(0, pos) << " " << str_1.substr(pos_s, pos_e);
+  // std::cout << str_1.substr(0, pos) << " " << str_1.substr(pos_s, pos_e);
   str_1 = str_1.substr(0, pos) + str_1.substr(pos_s, pos_e);
   fout << str_1;
 }
@@ -98,7 +99,7 @@ bool task_4::is_email_correct(std::string &str) {
   // проверка на отстсутствие некорректных символов
   const char forbid[] = R"(;:*,&^%$#+=()'"!?`~<>/\)";
   for (size_t i = 0; i < str.size(); ++i) {
-    for (uint8_t j = 0; forbid[j] != '\0'; ++i) {
+    for (uint8_t j = 0; forbid[j] != '\0'; ++j) {
       if (str[i] == forbid[j]) return false;
     }
   }
@@ -126,7 +127,6 @@ bool task_4::is_email_correct(std::string &str) {
     ++dll;
   }
   if (dll < 2) return false;
-  std::cout << dll;
   return true;
 }
 
