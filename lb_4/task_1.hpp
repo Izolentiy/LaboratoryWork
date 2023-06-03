@@ -11,6 +11,7 @@ namespace task_1 {
   void subtask_1(std::ifstream &, std::ofstream &);
   void subtask_2(std::ifstream &, std::ofstream &);
   void subtask_3(std::ifstream &, std::ofstream &);
+  void subtask_3_a(std::ifstream &, std::ofstream &);
   void subtask_4(std::ifstream &, std::ofstream &);
   void subtask_5(std::ifstream &, std::ofstream &);
 
@@ -96,19 +97,44 @@ void task_1::subtask_3(std::ifstream &fin, std::ofstream &fout) {
 }
 
 /**
+ * Задание 3 при другой интерпретации условия:
+ * Вывести все фрагменты упорядочив их по алфавиту
+ */
+void task_1::subtask_3_a(std::ifstream &fin, std::ofstream &fout) {
+
+  size_t str_size = 0;
+  char ch = fin.get();
+  while (ch != EOF) {
+    ch = fin.get(); ++str_size;
+    if (ch == '\n') break;
+  }
+
+  fin.clear();
+  fin.seekg(std::ios::beg);
+
+  char buff[4] = "";
+  for (size_t i = 0; i < str_size / 3; ++i) {
+    fin.read(buff, 3);
+    buff[1] = random_letter(buff[0], buff[2]);
+
+    if (buff[0] <= buff[1] && buff[1] <= buff[2]) {
+      fout << buff;
+    } else {
+      fout << "=+-"; // для наглядности
+    }
+  }
+}
+
+/**
  * Дана строка. Заменить каждый четный символ или на 'a', если символ
  * не равен 'a' или 'b', или на 'c' в противном случае.
  */
-void task_1::subtask_4(std::ifstream &fin, std::ofstream &fout) {
-  std::cout << "Not implemented\n";
-}
+void task_1::subtask_4(std::ifstream &fin, std::ofstream &fout) {}
 
 /**
  * В данной строке найти количество цифр
  */
-void task_1::subtask_5(std::ifstream &fin, std::ofstream &fout) {
-  std::cout << "Not implemented\n";
-}
+void task_1::subtask_5(std::ifstream &fin, std::ofstream &fout) {}
 
 #define ASCII_A_LOW 97
 #define ASCII_Z_LOW 122
