@@ -2,25 +2,21 @@
 #include <fstream>
 #include <iostream>
 
-typedef void (*subtask_t) (std::ifstream &, std::ofstream &);
+#include "task_typedefs.h"
 
 namespace task_6 {
   void subtask_1(std::ifstream &, std::ofstream &);
-
-  char peek();
-  char get();
-  
-  int expression();
-  int term();
-  int number();
-  int factor();
   
   subtask_t subtasks[] = {
     subtask_1
   };
 }
 
-char *expr; // указатель хранящий 
+// expression -> term -> factor -> number
+int expression(std::ifstream &fin);
+int term(std::ifstream &fin);
+int factor(std::ifstream &fin);
+int number(std::ifstream &fin);
 
 /**
  * Дана строка, которая содержит натуральные числа, знаки четырех 
@@ -30,65 +26,67 @@ char *expr; // указатель хранящий
 void task_6::subtask_1(std::ifstream &fin, std::ofstream &fout) {
   // (12*2)/3
   // формат ввода: пробелы не допускаются, ожидается только корректное выражение
-  std::string in;
-  if (!getline(fin, in)) return;
-  expr = &in[0];
-  fout << expression();
-}
-
-char task_6::peek() {
-  return *expr;
-}
-
-char task_6::get() {
-  return *expr++; // получаем то что лежит по текущему значению указателя и увеличиваем
+  fout << expression(fin);
 }
 
 // Убывание приоритета операции
-// 1. -()
-// 2. /*
-// 3. +-
+// 0. интерпретация числа
+// 1. -() унарный минус и скобки
+// 2. /* умножение и деление
+// 3. +- плюс и минус
 
-int task_6::number() {
-  int result = get() - '0';
-  while (peek() >= '0' && peek() <= '9') {
-    result = 10*result + get() - '0';
+/**
+ * Число
+ */
+int number(std::ifstream &fin) {
+  int result = fin.get() - '0';
+  while (fin.peek() >= '0' && fin.peek() <= '9') {
+    result = 10*result + fin.get() - '0';
   }
   return result;
 }
 
-int task_6::factor() {
-  if (peek() >= '0' && peek() <= '9')
-    return number();
-  else if (peek() == '(') {
-    get(); // '('
-    int result = expression();
-    get(); // ')'
+/**
+ * Множитель
+ */
+int factor(std::ifstream &fin) {
+  if (fin.peek() >= '0' && fin.peek() <= '9')
+    return number(fin);
+  else if (fin.peek() == '(') {
+    fin.get(); // '('
+    int result = expression(fin);
+    fin.get(); // ')'
     return result;
   }
-  else if (peek() == '-') {
-    get();
-    return -factor();
+  else if (fin.peek() == '-') {
+    fin.get();
+    return -factor(fin);
   }
-  return 0; // встретился нуль терминатор
+  return 0; // встретился неитрепритируемый символ
 }
 
-int task_6::term() {
-  int result = factor();
-  while (peek() == '*' || peek() == '/')
-    if (get() == '*')
-      result *= factor();
+/**
+ * Слагаемое
+ */
+int term(std::ifstream &fin) {
+  int result = factor(fin);
+  while (fin.peek() == '*' || fin.peek() == '/')
+    if (fin.get() == '*')
+      result *= factor(fin);
     else
-      result /= factor();
+      result /= factor(fin);
   return result;
 }
 
-int task_6::expression() {
-  int result = term();
-  while (peek() == '+' || peek() == '-')
-    if (get() == '+')
-      result += term();
+/**
+ * Выражение
+ */
+int expression(std::ifstream &fin) {
+  int result = term(fin);
+  while (fin.peek() == '+' || fin.peek() == '-')
+    if (fin.get() == '+')
+      result += term(fin);
     else
-      result -= term();
+      result -= term(fin);
   return result;
 }
