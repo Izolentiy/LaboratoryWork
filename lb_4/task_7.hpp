@@ -37,23 +37,27 @@ void task_7::subtask_1(std::ifstream &fin, std::ofstream &fout) {
 
   // анализируем текст
   // извлекаем отдельные слова из текста
-  size_t i = 0, ws = 0, we = 0; // index, word start, word end
+  size_t ws = 0; // word start
+  size_t we = 0; // word end
+  size_t wl = 0; // word length
+  bool pil = false; // previous is letter
 
-  while (i < src.size()) {
+  for (size_t i = 0; i < src.size(); ++i) {
     if (my::is_letter(src[i])) {
-      if (we >= ws) ws = i;
+      if (!pil) ws = i;
+      ++wl;
+      pil = true;
     } else {
-      if (we < ws) {
-        we = i;
+      if (wl > 0) {
         tem.clear();
+        we = ws + wl;
         while (ws < we)
           tem.push_back(src[ws++]);
         // сравниваем слово со словами из списка
+        // если находим отличающееся на один символ записываем
+        // слово из списка вместо текущего слова
         bool write_init = true;
         for (int j = 0; j < 4; ++j) {
-          // std::cout << &tem[0] << ' ' << words[j] << "\n";
-          // std::cout << "diff count " << my::count_diff(words[j], &tem[0]) << "\n";
-          // std::cout << my::str_len(&tem[0]) << " " << my::str_len(words[j]) << "\n";
           if (my::count_diff(words[j], &tem[0]) == 1) {
             fout << words[j] << ' ';
             write_init = false;
@@ -66,8 +70,9 @@ void task_7::subtask_1(std::ifstream &fin, std::ofstream &fout) {
       } else {
         fout << src[i];
       }
+      wl = 0;
+      pil = false;
     }
-    ++i;
   }
   
 }
