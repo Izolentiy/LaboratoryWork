@@ -1,15 +1,19 @@
 #pragma once
 #include <fstream>
 #include <iostream>
+#include <math.h>
 
 #include "task_typedefs.h"
 #include "str_utils.h"
 
 namespace task_7 {
   void subtask_1(std::ifstream &, std::ofstream &);
+  void subtask_2(std::ifstream &, std::ofstream &);
+  void subtask_3(std::ifstream &, std::ofstream &);
+  void subtask_4(std::ifstream &, std::ofstream &);
   
   subtask_t subtasks[] = {
-    subtask_1
+    subtask_1, subtask_2, subtask_3, subtask_4
   };
 }
 
@@ -23,11 +27,9 @@ void task_7::subtask_1(std::ifstream &fin, std::ofstream &fout) {
   string src, tem, res;
 
   // список слов
-  char* words[] = {
-    "apple",
-    "pineapple",
-    "pen",
-    "banana",
+  const char* words[] = {
+    "apple", "pineapple",
+    "pen", "banana",
   };
   
   // считываем текст в string
@@ -53,8 +55,9 @@ void task_7::subtask_1(std::ifstream &fin, std::ofstream &fout) {
         we = ws + wl;
         while (ws < we)
           tem.push_back(src[ws++]);
+
         // сравниваем слово со словами из списка
-        // если находим отличающееся на один символ записываем
+        // если находим отличающееся на один символ, записываем
         // слово из списка вместо текущего слова
         bool write_init = true;
         for (int j = 0; j < 4; ++j) {
@@ -75,4 +78,51 @@ void task_7::subtask_1(std::ifstream &fin, std::ofstream &fout) {
     }
   }
   
+}
+
+void task_7::subtask_2(std::ifstream &, std::ofstream &) {}
+void task_7::subtask_3(std::ifstream &, std::ofstream &) {}
+
+/**
+ * Дан текст. Заменить все вхождения наибольшей цифры ее словесным написанием.
+ */
+void task_7::subtask_4(std::ifstream &fin, std::ofstream &fout) {
+  std::string txt, str;
+
+  // считываем текст построчно
+  while (getline(fin, str)) {
+    txt += str;
+  }
+
+  // поиск максимальной цифры
+  char max_dig = '0' - 1; // maximum digit
+  for (size_t i = 0; i < txt.size(); ++i) {
+    // это проверка, является текущий символ цифрой
+    if ('0' <= txt[i] && txt[i] <= '9') {
+      max_dig = std::max(txt[i], max_dig);
+    }
+  }
+
+  // словесное представление макс. цифры
+  std::string max_dig_str;
+
+  switch(max_dig) {
+  case '0': max_dig_str = "zero"; break;
+  case '1': max_dig_str = "one"; break;
+  case '2': max_dig_str = "two"; break;
+  case '3': max_dig_str = "three"; break;
+  case '4': max_dig_str = "four"; break;
+  case '5': max_dig_str = "five"; break;
+  case '6': max_dig_str = "six"; break;
+  case '7': max_dig_str = "seven"; break;
+  case '8': max_dig_str = "eight"; break;
+  case '9': max_dig_str = "nine"; break;
+  default: fout << txt;
+  }
+
+  for (size_t i = 0; i < txt.size(); ++i) {
+    if (txt[i] == max_dig) fout << max_dig_str;
+    else fout << txt[i];
+  }
+
 }
