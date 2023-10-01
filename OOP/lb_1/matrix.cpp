@@ -1,12 +1,10 @@
 #include "matrix.h"
-#include "str_helper.h"
 
 matrix::matrix(int rows, int cols)
 {
     this->r = rows;
     this->c = cols;
     this->e.resize(rows * cols);
-    // this->rp = row(&e, c);
 }
 
 matrix::matrix(std::vector<double> elems, int rows, int cols)
@@ -14,50 +12,22 @@ matrix::matrix(std::vector<double> elems, int rows, int cols)
     this->r = rows;
     this->c = cols;
     this->e = elems;
-    // this->rp = row(&e, c);
 }
 
+/**
+ * @throw "Invalid input"
+ */
 matrix::matrix(std::ifstream &fin)
 {
-    int cols = 0;
-    int rows = 0;
+    int cols = 0, rows = 0;
     std::string str;         // string
     std::vector<double> vec; // elements
 
     while (std::getline(fin, str))
     {
-        size_t bpos = 0, epos = 0; // begin/end position
-        bool ns = false;           // number started
-        double temp = 0;           // temp value
-
-        int cur_cols = 0;
-        for (size_t i = 0; i < str.size(); ++i)
-        {
-            if (ns)
-            {
-                if (str[i] == ' ')
-                    epos = i;
-                else if (i == str.size() - 1)
-                    epos = i + 1;
-                else
-                    continue;
-                ns = false;
-                temp = to_double(str.substr(bpos, epos - bpos));
-                vec.push_back(temp);
-                ++cur_cols;
-            }
-            else if (is_digit(str[i]))
-            {
-                bpos = i;
-                ns = true;
-                if (i == str.size() - 1)
-                {
-                    temp = to_double(str.substr(bpos, 1));
-                    vec.push_back(temp);
-                    ++cur_cols;
-                }
-            }
-        }
+        size_t sb = vec.size();             // size before manipulation
+        str_helper::add_elements(vec, str); // add new row to matrix
+        int cur_cols = vec.size() - sb;     // column count in row
 
         if (rows == 0)
             cols = cur_cols;
@@ -70,7 +40,6 @@ matrix::matrix(std::ifstream &fin)
     this->c = cols;
     this->r = rows;
     this->e = vec;
-    // this->rp = row(&e, c);
 }
 
 void matrix::print_elements()
@@ -113,7 +82,7 @@ int matrix::get_print_width()
  * Чтобы найти определитель, можно воспользоваться
  * метдом разложения по строке/столбцу.
  * Или же методом Гаусса
- * TODO: Реализовать метод метод Гаусса
+ * TODO: Реализовать метод Гаусса
  *
  * Но перед этим стоит сделать проверку, на частные
  * случаи (матрица 2 на 2, не квадратная матрица)
@@ -184,6 +153,9 @@ matrix *matrix::transposition()
     return new matrix(vec, c, r);
 }
 
+/**
+ * @throw "Degenerate matrix"
+ */
 matrix *matrix::get_inverse()
 {
     double det = determinant();
@@ -200,6 +172,9 @@ matrix *matrix::get_inverse()
     return new matrix(v, r, r);
 }
 
+/**
+ * @throw "Multiplication is not applicable"
+ */
 matrix *matrix::operator*(matrix &other)
 {
     int orw = other.get_rows(); // other rows
@@ -256,13 +231,14 @@ void matrix::operator*=(double num)
 
 row &matrix::operator[](int row)
 {
-    rp.set_number(row);
+    rp.set(row);
     return rp;
 }
 
 matrix::~matrix()
 {
-    std::cout << "Destructor for " << this << " called" << std::endl;
+    std::cout << "Destructor for " << this << " was called";
+    std::cout << std::endl;
 }
 
 double matrix::get_alg_com(int row, int col)
@@ -281,7 +257,7 @@ double matrix::get_alg_com(int row, int col)
 
 /**
  * TODO: Избавиться от излишнего создания объектов
-*/
+ */
 matrix *matrix::get_minor(int row, int col)
 {
     std::vector<double> elems;
@@ -311,7 +287,7 @@ double row::operator[](int col)
     return (*d)[rn * cc + col];
 }
 
-void row::set_number(int n)
+void row::set(int n)
 {
     this->rn = n;
 }

@@ -5,7 +5,12 @@
 #include <fstream>
 #include <cmath>
 
-bool is_digit(char);
-bool is_delim(char);
-double to_double(std::string);
-std::vector<double> to_vector(std::ifstream &);
+namespace str_helper
+{
+    bool is_digit(char ch);
+    bool is_delim(char ch);
+    size_t validate(std::string str);
+    double to_double(std::string str);
+    void add_elements(std::vector<double> &dest, std::string &str);
+    std::vector<double> to_vector(std::ifstream &fin);
+}

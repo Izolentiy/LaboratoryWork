@@ -2,6 +2,7 @@
 #include <iostream>
 #include <iomanip>
 #include <fstream>
+#include "str_helper.h"
 
 /**
  * matrix m;
@@ -13,13 +14,13 @@ class row
 public:
     row(std::vector<double> *d, int &cc);
     double operator[](int col);
-    void set_number(int n);
+    void set(int row_num);
     ~row();
 
 private:
     std::vector<double> *d; // data of parent matrix
-    const int rn;           // row number
-    const int cc;           // column count of parent matrix
+    int cc;                 // column count of parent matrix
+    int rn;                 // row number
 };
 
 class matrix

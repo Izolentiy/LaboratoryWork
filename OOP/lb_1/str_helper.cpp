@@ -1,13 +1,13 @@
 #include "str_helper.h"
 
-bool is_digit(char ch)
+bool str_helper::is_digit(char ch)
 {
     if ('0' <= ch && ch <= '9')
         return true;
     return false;
 }
 
-bool is_delim(char ch)
+bool str_helper::is_delim(char ch)
 {
     if (ch == '.' || ch == ',')
         return true;
@@ -18,7 +18,7 @@ bool is_delim(char ch)
  * @throw "Invalid input"
  * @return delimeter position
  */
-size_t validate(std::string str)
+size_t str_helper::validate(std::string str)
 {
     bool is_num = true;              // is number
     bool df = false;                 // delimeter found
@@ -53,7 +53,7 @@ size_t validate(std::string str)
 /**
  * @throw "Invalid input"
  */
-double to_double(std::string str)
+double str_helper::to_double(std::string str)
 {
     double res = 0;              // result
     size_t dpos = validate(str); // delimeter position
@@ -86,9 +86,42 @@ double to_double(std::string str)
 }
 
 /**
+ * Add elements to vector from string
+ * @throw "Invalid input"
+ * @param dest destination for elements
+ * @param str source string
+ **/
+void str_helper::add_elements(std::vector<double> &dest, std::string &str)
+{
+    size_t bpos = 0, epos = 0; // begin/end position
+    bool ns = false;           // number started
+    double temp = 0;           // temp value
+
+    for (size_t i = 0; i < str.size(); ++i)
+    {
+        if (is_digit(str[i]) || is_delim(str[i]) && !ns)
+        {
+            bpos = i;
+            ns = true;
+        }
+        else
+        {
+            epos = i;
+            ns = false;
+        }
+        if (i == str.size() - 1 && ns)
+            epos = i + 1;
+        if (bpos >= epos)
+            continue;
+        temp = to_double(str.substr(bpos, epos - bpos));
+        dest.push_back(temp);
+    }
+}
+
+/**
  * @throw "Invalid input"
  */
-std::vector<double> to_vector(std::ifstream &fin)
+std::vector<double> str_helper::to_vector(std::ifstream &fin)
 {
     std::string str;         // string
     std::vector<double> vec; // elements

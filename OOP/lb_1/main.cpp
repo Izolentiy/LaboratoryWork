@@ -16,7 +16,7 @@ int main()
         std::cout << "\nmatrix 9 * A" << std::endl;
         a9->print_elements();
 
-        std::cout << "\nmatrix A: e[1][1] = " << a[0][0] << std::endl;
+        std::cout << "\nmatrix A: e[0][0] = " << a[0][0] << std::endl;
 
         matrix *c = a.get_inverse();
         std::cout << "\nmatrix A inverse" << std::endl;
@@ -49,7 +49,7 @@ void str_helper_test()
     if (fin.is_open())
         try
         {
-            std::vector elements = to_vector(fin);
+            std::vector elements = str_helper::to_vector(fin);
             std::cout << std::fixed << std::setprecision(0);
             for (int i = 0; i < 4; ++i)
             {
@@ -60,7 +60,7 @@ void str_helper_test()
                 std::cout << "\n";
             }
 
-            double result = to_double("1234,56789");
+            double result = str_helper::to_double("1234,56789");
             std::cout << "Result: " << result << std::endl;
         }
         catch (char const *msg)
