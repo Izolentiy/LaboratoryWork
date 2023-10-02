@@ -48,8 +48,7 @@ void scenario_1()
     std::ifstream fin;
     try
     {
-        matrix *m = read(fin, "input.txt");
-        matrix a = *m;
+        matrix &a = *(read(fin, "input\\matrix_A.txt"));
         std::cout << "\nmatrix A" << std::endl;
         a.print_elements();
 
@@ -76,39 +75,34 @@ void scenario_1()
         delete c;
         delete a9;
         std::cout << "Deleted objects" << std::endl;
+
+        matrix &p = *(read(fin, "input\\matrix_B.txt"));
+        matrix &q = *(read(fin, "input\\matrix_C.txt"));
+
+        std::cout << "\nmatrix P" << std::endl;
+        p.print_elements();
+
+        std::cout << "\nmatrix Q" << std::endl;
+        q.print_elements();
+
+        std::cout << "\nmatrix P * Q" << std::endl;
+        matrix *j = p * q;
+        j->print_elements();
+
+        std::cout << "\nmatrix Q * P" << std::endl;
+        matrix *i = q * p;
+        i->print_elements();
+
+        delete i;
+        delete j;
+        delete &q;
+        delete &p;
     }
     catch (const char *msg)
     {
         std::cout << msg << std::endl;
     }
 
-    matrix &b = *(read(fin, "input\\matrix_B.txt"));
-    matrix &c = *(read(fin, "input\\matrix_C.txt"));
-    try {
-        std::cout << "\nmatrix B" << std::endl;
-        b.print_elements();
-
-        std::cout << "\nmatrix C" << std::endl;
-        c.print_elements();
-
-        std::cout << "\nmatrix B * C" << std::endl;
-        matrix *d = b * c;
-        d->print_elements();
-
-        std::cout << "\nmatrix C * B" << std::endl;
-        matrix *e = c * b;
-        e->print_elements();
-
-        delete e;
-        delete d;
-    }
-    catch (const char *msg)
-    {
-        std::cout << msg << std::endl;
-    }
-
-    delete &c;
-    delete &b;
 }
 
 void str_helper_test()
@@ -144,6 +138,8 @@ matrix *read(std::ifstream &fin, std::string s)
     fin.open(s);
     if (fin.is_open())
         m = new matrix(fin);
+    else
+        throw "Unable to open file";
     fin.close();
     return m;
 }

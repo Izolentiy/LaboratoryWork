@@ -5,27 +5,21 @@
 #include <fstream>
 #include "str_helper.h"
 
-/**
- * matrix m;
- * m[n]      // returns row with number n
- * m[r][c]   // returns element
- */
-class row
-{
-public:
-    row(std::vector<double> &d, int &cc);
-    double &operator[](int col);
-    void set(int row_num);
-    ~row();
-
-private:
-    std::vector<double> &data; // data of parent matrix
-    int col_count;             // column count of parent matrix
-    int row_num;               // row number
-};
-
 class matrix
 {
+    class row
+    {
+        friend matrix;
+    public:
+        row(std::vector<double> &d, int &cc);
+        double &operator[](int col);
+        ~row();
+    private:
+        std::vector<double> &data; // data of parent matrix
+        int col_count;             // column count of parent matrix
+        int row_num;               // row number
+    };
+
 public:
     matrix(int rows, int cols);
     matrix(std::vector<double> elems, int rows, int cols);

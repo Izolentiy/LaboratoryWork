@@ -232,9 +232,9 @@ void matrix::operator*=(double num)
     }
 }
 
-row &matrix::operator[](int row)
+matrix::row &matrix::operator[](int row)
 {
-    rp.set(row);
+    rp.row_num = row;
     return rp;
 }
 
@@ -286,21 +286,16 @@ matrix &matrix::get_minor(
     return minor;
 }
 
-row::row(std::vector<double> &d, int &cc) : data(d)
+matrix::row::row(std::vector<double> &d, int &cc) : data(d)
 {
     this->col_count = cc;
 }
 
-double &row::operator[](int col)
+double &matrix::row::operator[](int col)
 {
     return data[row_num * col_count + col];
 }
 
-void row::set(int n)
-{
-    this->row_num = n;
-}
-
-row::~row()
+matrix::row::~row()
 {
 }
