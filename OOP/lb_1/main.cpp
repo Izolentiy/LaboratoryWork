@@ -1,9 +1,48 @@
 #include "str_helper.h"
 #include "matrix.h"
+#include "time_helper.hpp"
 
 void str_helper_test();
+void scenario_1();
+void scenario_2();
 
 int main()
+{
+    scenario_2();
+}
+
+void scenario_2()
+{
+    std::ifstream fin("input.txt");
+    if (fin.is_open()) try
+    {
+        matrix a = matrix(fin);
+        double det = 0.0;
+        // Measuring determinant calculation time
+        auto action = [&]()
+        {
+            det = a.determinant();
+        };
+
+        run_with_time_measurement(action, time_unit::millis);
+        // run_with_time_measurement(action, time_unit::micros);
+        // run_with_time_measurement(action, time_unit::nanos);
+
+        a.set_print_precision(0);
+        a.set_print_width(2);
+        a.print_elements();
+        std::cout << "\nmatrix A("
+                  << a.get_rows() << ", " << a.get_cols()
+                  << ") det: " << det << std::endl;
+    }
+    catch (const char *msg)
+    {
+        std::cout << msg << std::endl;
+    }
+    fin.close();
+}
+
+void scenario_1()
 {
     std::ifstream fin("input.txt");
     if (fin.is_open()) try

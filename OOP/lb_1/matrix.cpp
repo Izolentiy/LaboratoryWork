@@ -96,13 +96,9 @@ int matrix::get_print_width()
 double matrix::determinant()
 {
     if (r != c) // не квадратная матрица
-    {
         throw "Non square matrix";
-    }
     if (r == 2) // частный случай
-    {
         return e[0] * e[3] - e[1] * e[2];
-    }
 
     double result = 0.0;
     for (int i = 0; i < c; ++i)
@@ -237,8 +233,8 @@ row &matrix::operator[](int row)
 
 matrix::~matrix()
 {
-    std::cout << "Destructor for " << this << " was called";
-    std::cout << std::endl;
+    // std::cout << "Destructor for " << this << " was called";
+    // std::cout << std::endl;
 }
 
 double matrix::get_alg_com(int row, int col)
@@ -273,6 +269,7 @@ matrix *matrix::get_minor(int row, int col)
             }
         }
     }
+    matrix m(1, 1);
     return new matrix(elems, r - 1, c - 1);
 }
 
