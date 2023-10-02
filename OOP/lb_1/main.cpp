@@ -2,18 +2,20 @@
 #include "matrix.h"
 #include "time_helper.hpp"
 
+matrix *read(std::ifstream &fin, std::string s);
 void str_helper_test();
 void scenario_1();
 void scenario_2();
 
 int main()
 {
-    scenario_2();
+    scenario_1();
+    // scenario_2();
 }
 
 void scenario_2()
 {
-    std::ifstream fin("input.txt");
+    std::ifstream fin("input\\matrix_A.txt");
     if (fin.is_open()) try
     {
         matrix a = matrix(fin);
@@ -43,10 +45,11 @@ void scenario_2()
 
 void scenario_1()
 {
-    std::ifstream fin("input.txt");
-    if (fin.is_open()) try
+    std::ifstream fin;
+    try
     {
-        matrix a(fin);
+        matrix *m = read(fin, "input.txt");
+        matrix a = *m;
         std::cout << "\nmatrix A" << std::endl;
         a.print_elements();
 
@@ -78,12 +81,39 @@ void scenario_1()
     {
         std::cout << msg << std::endl;
     }
-    fin.close();
+
+    matrix &b = *(read(fin, "input\\matrix_B.txt"));
+    matrix &c = *(read(fin, "input\\matrix_C.txt"));
+    try {
+        std::cout << "\nmatrix B" << std::endl;
+        b.print_elements();
+
+        std::cout << "\nmatrix C" << std::endl;
+        c.print_elements();
+
+        std::cout << "\nmatrix B * C" << std::endl;
+        matrix *d = b * c;
+        d->print_elements();
+
+        std::cout << "\nmatrix C * B" << std::endl;
+        matrix *e = c * b;
+        e->print_elements();
+
+        delete e;
+        delete d;
+    }
+    catch (const char *msg)
+    {
+        std::cout << msg << std::endl;
+    }
+
+    delete &c;
+    delete &b;
 }
 
 void str_helper_test()
 {
-    std::ifstream fin("input.txt");
+    std::ifstream fin("input\\matrix_A.txt");
     if (fin.is_open())
         try
         {
@@ -106,4 +136,14 @@ void str_helper_test()
             std::cout << msg << std::endl;
         }
     fin.close();
+}
+
+matrix *read(std::ifstream &fin, std::string s)
+{
+    matrix *m = nullptr;
+    fin.open(s);
+    if (fin.is_open())
+        m = new matrix(fin);
+    fin.close();
+    return m;
 }

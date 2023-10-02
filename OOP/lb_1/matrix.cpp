@@ -2,18 +2,18 @@
 
 matrix::matrix(int rows, int cols)
 {
-    this->r = rows;
-    this->c = cols;
-    this->e.resize(rows * cols);
+    this->rows = rows;
+    this->cols = cols;
+    this->elems.resize(rows * cols);
     // std::cout << "Constructor for " << this << " was called";
     // std::cout << std::endl;
 }
 
 matrix::matrix(std::vector<double> elems, int rows, int cols)
 {
-    this->r = rows;
-    this->c = cols;
-    this->e = elems;
+    this->rows = rows;
+    this->cols = cols;
+    this->elems = elems;
     // std::cout << "Constructor for " << this << " was called";
     // std::cout << std::endl;
 }
@@ -41,9 +41,9 @@ matrix::matrix(std::ifstream &fin)
         ++rows;
     }
 
-    this->c = cols;
-    this->r = rows;
-    this->e = vec;
+    this->cols = cols;
+    this->rows = rows;
+    this->elems = vec;
     // std::cout << "Constructor for " << this << " was called";
     // std::cout << std::endl;
 }
@@ -51,14 +51,14 @@ matrix::matrix(std::ifstream &fin)
 void matrix::print_elements()
 {
     std::cout << '\n';
-    for (int i = 0; i < c; ++i)
+    for (int i = 0; i < rows; ++i)
     {
-        for (int j = 0; j < r; ++j)
+        for (int j = 0; j < cols; ++j)
         {
             std::cout << std::fixed
-                      << std::setw(pw)
-                      << std::setprecision(pp)
-                      << e[i * c + j] << " ";
+                      << std::setw(print_width)
+                      << std::setprecision(print_prec)
+                      << elems[i * cols + j] << " ";
         }
         std::cout << '\n';
     }
@@ -67,22 +67,22 @@ void matrix::print_elements()
 
 int matrix::get_cols()
 {
-    return c;
+    return cols;
 }
 
 int matrix::get_rows()
 {
-    return r;
+    return rows;
 }
 
 int matrix::get_precision()
 {
-    return this->pp;
+    return this->print_prec;
 }
 
 int matrix::get_print_width()
 {
-    return this->pw;
+    return this->print_width;
 }
 
 /**
@@ -102,15 +102,15 @@ int matrix::get_print_width()
  */
 double matrix::determinant()
 {
-    if (r != c) // не квадратная матрица
+    if (rows != cols) // не квадратная матрица
         throw "Non square matrix";
-    if (r == 2) // частный случай
-        return e[0] * e[3] - e[1] * e[2];
+    if (rows == 2) // частный случай
+        return elems[0] * elems[3] - elems[1] * elems[2];
 
     double result = 0.0;
-    for (int i = 0; i < c; ++i)
+    for (int i = 0; i < cols; ++i)
     {
-        result += get_alg_com(0, i) * e[i];
+        result += get_alg_com(0, i) * elems[i];
     }
     return result;
 }
@@ -121,7 +121,7 @@ double matrix::determinant()
  */
 double matrix::get_(int row, int col)
 {
-    return e[(row - 1) * c + col - 1];
+    return elems[(row - 1) * cols + col - 1];
 }
 
 /**
@@ -130,30 +130,30 @@ double matrix::get_(int row, int col)
  */
 double matrix::get(int row, int col)
 {
-    return e[row * c + col];
+    return elems[row * cols + col];
 }
 
 void matrix::set_print_precision(int prec)
 {
-    this->pp = prec;
+    this->print_prec = prec;
 }
 
 void matrix::set_print_width(int width)
 {
-    this->pw = width;
+    this->print_width = width;
 }
 
 matrix *matrix::transposition()
 {
     std::vector<double> vec;
-    for (int i = 0; i < r; ++i)
+    for (int i = 0; i < rows; ++i)
     {
-        for (int j = 0; j < c; ++j)
+        for (int j = 0; j < cols; ++j)
         {
-            vec.push_back(e[j * r + i]);
+            vec.push_back(elems[j * rows + i]);
         }
     }
-    return new matrix(vec, c, r);
+    return new matrix(vec, cols, rows);
 }
 
 /**
@@ -164,15 +164,15 @@ matrix *matrix::get_inverse()
     double det = determinant();
     if (det == 0)
         throw "Degenerate matrix";
-    std::vector<double> v(r * r);
-    for (int i = 0; i < r; ++i)
+    std::vector<double> vec(rows * rows);
+    for (int i = 0; i < rows; ++i)
     {
-        for (int j = 0; j < c; ++j)
+        for (int j = 0; j < cols; ++j)
         {
-            v[j * c + i] = get_alg_com(i, j) / det;
+            vec[j * cols + i] = get_alg_com(i, j) / det;
         }
     }
-    return new matrix(v, r, r);
+    return new matrix(vec, rows, rows);
 }
 
 /**
@@ -183,16 +183,16 @@ matrix *matrix::operator*(matrix &other)
     int orw = other.get_rows(); // other rows
     int oc = other.get_cols();  // other columns
 
-    if (this->c != orw)
+    if (this->cols != orw)
         throw "Multiplication is not applicable";
-    std::vector<double> res(r * oc);
+    std::vector<double> res(rows * oc);
 
-    for (int i = 0; i < r; ++i)
+    for (int i = 0; i < rows; ++i)
     {
         for (int j = 0; j < oc; ++j)
         {
             double sum = 0, temp = 0;
-            for (int k = 0; k < c; ++k)
+            for (int k = 0; k < cols; ++k)
             {
                 temp = other.get(k, j);
                 sum += get(i, k) * temp;
@@ -200,7 +200,7 @@ matrix *matrix::operator*(matrix &other)
             res[i * oc + j] = sum;
         }
     }
-    return new matrix(res, r, oc);
+    return new matrix(res, rows, oc);
 }
 
 matrix *matrix::operator*(matrix *other)
@@ -211,23 +211,23 @@ matrix *matrix::operator*(matrix *other)
 matrix *matrix::operator*(double num)
 {
     std::vector<double> vec;
-    for (int i = 0; i < r; ++i)
+    for (int i = 0; i < rows; ++i)
     {
-        for (int j = 0; j < c; ++j)
+        for (int j = 0; j < cols; ++j)
         {
-            vec.push_back(e[i * c + j] * num);
+            vec.push_back(elems[i * cols + j] * num);
         }
     }
-    return new matrix(vec, r, c);
+    return new matrix(vec, rows, cols);
 }
 
 void matrix::operator*=(double num)
 {
-    for (int i = 0; i < r; ++i)
+    for (int i = 0; i < rows; ++i)
     {
-        for (int j = 0; j < c; ++j)
+        for (int j = 0; j < cols; ++j)
         {
-            e[i * c + j] *= num;
+            elems[i * cols + j] *= num;
         }
     }
 }
@@ -240,8 +240,8 @@ row &matrix::operator[](int row)
 
 matrix::~matrix()
 {
-    std::cout << "Destructor for " << this << " was called";
-    std::cout << std::endl;
+    // std::cout << "Destructor for " << this << " was called";
+    // std::cout << std::endl;
 }
 
 double matrix::get_alg_com(int row, int col)
@@ -252,7 +252,7 @@ double matrix::get_alg_com(int row, int col)
     static std::vector<matrix *> minors;
     if (minors.size() == 0)
     {
-        for (int i = 2; i < r; ++i)
+        for (int i = 2; i < rows; ++i)
         {
             minors.push_back(new matrix(i, i));
         }
@@ -269,37 +269,36 @@ double matrix::get_alg_com(int row, int col)
 matrix &matrix::get_minor(
     int row, int col, std::vector<matrix *> minors
 ) {
-    matrix &minor = *(minors[r-3]);
+    matrix &minor = *(minors[rows-3]);
     int k = 0;
-    for (int i = 0; i < r; ++i)
+    for (int i = 0; i < rows; ++i)
     {
         if (i == row)
             continue;
-        for (int j = 0; j < c; ++j)
+        for (int j = 0; j < cols; ++j)
         {
             if (j != col)
             {
-                minor.e[k++] = this->get(i, j);
+                minor.elems[k++] = this->get(i, j);
             }
         }
     }
     return minor;
 }
 
-row::row(std::vector<double> *d, int &cc)
+row::row(std::vector<double> &d, int &cc) : data(d)
 {
-    this->d = d;
-    this->cc = cc;
+    this->col_count = cc;
 }
 
 double &row::operator[](int col)
 {
-    return (*d)[rn * cc + col];
+    return data[row_num * col_count + col];
 }
 
 void row::set(int n)
 {
-    this->rn = n;
+    this->row_num = n;
 }
 
 row::~row()

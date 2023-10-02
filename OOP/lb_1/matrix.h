@@ -1,3 +1,4 @@
+#pragma once
 #include <vector>
 #include <iostream>
 #include <iomanip>
@@ -12,15 +13,15 @@
 class row
 {
 public:
-    row(std::vector<double> *d, int &cc);
+    row(std::vector<double> &d, int &cc);
     double &operator[](int col);
     void set(int row_num);
     ~row();
 
 private:
-    std::vector<double> *d; // data of parent matrix
-    int cc;                 // column count of parent matrix
-    int rn;                 // row number
+    std::vector<double> &data; // data of parent matrix
+    int col_count;             // column count of parent matrix
+    int row_num;               // row number
 };
 
 class matrix
@@ -54,12 +55,12 @@ public:
     ~matrix();
 
 private:
-    int r;                 // rows
-    int c;                 // columns
-    int pp = 2;            // print precision
-    int pw = 6;            // print width
-    std::vector<double> e; // elements
-    row rp = row(&e, c);   // row proxy
+    int rows;                  // rows
+    int cols;                  // columns
+    int print_prec = 2;        // print precision
+    int print_width = 6;       // print width
+    std::vector<double> elems; // elements
+    row rp = row(elems, cols); // row proxy
 
     double get_alg_com(int row, int col); // algebraic complement
     matrix &get_minor(int row, int col, std::vector<matrix *>);
