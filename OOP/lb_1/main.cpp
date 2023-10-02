@@ -18,22 +18,21 @@ void scenario_2()
     {
         matrix a = matrix(fin);
         double det = 0.0;
-        // Measuring determinant calculation time
+
         auto action = [&]()
         {
             det = a.determinant();
         };
-
-        run_with_time_measurement(action, time_unit::millis);
-        // run_with_time_measurement(action, time_unit::micros);
+        // run_with_time_measurement(action, time_unit::millis);
+        run_with_time_measurement(action, time_unit::micros);
         // run_with_time_measurement(action, time_unit::nanos);
 
         a.set_print_precision(0);
         a.set_print_width(2);
-        a.print_elements();
         std::cout << "\nmatrix A("
                   << a.get_rows() << ", " << a.get_cols()
-                  << ") det: " << det << std::endl;
+                  << ") det: " << det << "\n";
+        a.print_elements();
     }
     catch (const char *msg)
     {

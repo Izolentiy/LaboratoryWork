@@ -13,7 +13,7 @@ class row
 {
 public:
     row(std::vector<double> *d, int &cc);
-    double operator[](int col);
+    double &operator[](int col);
     void set(int row_num);
     ~row();
 
@@ -62,5 +62,5 @@ private:
     row rp = row(&e, c);   // row proxy
 
     double get_alg_com(int row, int col); // algebraic complement
-    matrix *get_minor(int row, int col);
+    matrix &get_minor(int row, int col, std::vector<matrix *>);
 };

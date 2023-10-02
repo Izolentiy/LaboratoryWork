@@ -5,6 +5,8 @@ matrix::matrix(int rows, int cols)
     this->r = rows;
     this->c = cols;
     this->e.resize(rows * cols);
+    // std::cout << "Constructor for " << this << " was called";
+    // std::cout << std::endl;
 }
 
 matrix::matrix(std::vector<double> elems, int rows, int cols)
@@ -12,6 +14,8 @@ matrix::matrix(std::vector<double> elems, int rows, int cols)
     this->r = rows;
     this->c = cols;
     this->e = elems;
+    // std::cout << "Constructor for " << this << " was called";
+    // std::cout << std::endl;
 }
 
 /**
@@ -40,10 +44,13 @@ matrix::matrix(std::ifstream &fin)
     this->c = cols;
     this->r = rows;
     this->e = vec;
+    // std::cout << "Constructor for " << this << " was called";
+    // std::cout << std::endl;
 }
 
 void matrix::print_elements()
 {
+    std::cout << '\n';
     for (int i = 0; i < c; ++i)
     {
         for (int j = 0; j < r; ++j)
@@ -233,30 +240,37 @@ row &matrix::operator[](int row)
 
 matrix::~matrix()
 {
-    // std::cout << "Destructor for " << this << " was called";
-    // std::cout << std::endl;
+    std::cout << "Destructor for " << this << " was called";
+    std::cout << std::endl;
 }
 
 double matrix::get_alg_com(int row, int col)
 {
-    double elem = e[row * c + col];
-    if (elem == 0)
+    if (get(row, col) == 0)
         return 0;
-    matrix *minor = get_minor(row, col);
-    double result = minor->determinant();
+
+    static std::vector<matrix *> minors;
+    if (minors.size() == 0)
+    {
+        for (int i = 2; i < r; ++i)
+        {
+            minors.push_back(new matrix(i, i));
+        }
+    }
+
+    matrix &minor = get_minor(row, col, minors);
+    double result = minor.determinant();
     if ((row + col) % 2 != 0)
         result = -result;
 
-    delete minor;
     return result;
 }
 
-/**
- * TODO: Избавиться от излишнего создания объектов
- */
-matrix *matrix::get_minor(int row, int col)
-{
-    std::vector<double> elems;
+matrix &matrix::get_minor(
+    int row, int col, std::vector<matrix *> minors
+) {
+    matrix &minor = *(minors[r-3]);
+    int k = 0;
     for (int i = 0; i < r; ++i)
     {
         if (i == row)
@@ -265,12 +279,11 @@ matrix *matrix::get_minor(int row, int col)
         {
             if (j != col)
             {
-                elems.push_back(e[i * c + j]);
+                minor.e[k++] = this->get(i, j);
             }
         }
     }
-    matrix m(1, 1);
-    return new matrix(elems, r - 1, c - 1);
+    return minor;
 }
 
 row::row(std::vector<double> *d, int &cc)
@@ -279,7 +292,7 @@ row::row(std::vector<double> *d, int &cc)
     this->cc = cc;
 }
 
-double row::operator[](int col)
+double &row::operator[](int col)
 {
     return (*d)[rn * cc + col];
 }
