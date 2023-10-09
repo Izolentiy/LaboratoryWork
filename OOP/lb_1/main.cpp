@@ -22,19 +22,17 @@ void scenario_3()
         double det_d = 0, det_a = 0;
         det_d = d.determinant();
         det_a = a.determinant();
-        a >> std::cout;
-        a >> "output\\scenario_3.txt";
-        std::cout << "\n\n";
+        std::cout << a << "\n\n";
+        "output\\scenario_3.txt" << a;
         
         matrix t = d^(-1); // transpositioned
-        t >> std::cout;
+        std::cout << t << "\n\n";
         t.export_to_scv("kek");
-        std::cout << "\n\n";
 
         matrix k = d^2;
-        k >> std::cout;
-        std::cout << "\n\n";
-
+        std::cout << k << "\n\n";
+        
+        "output\\scenario_3.txt" << k;
     }
     catch(const std::exception& e)
     {
@@ -54,16 +52,14 @@ void scenario_2()
         {
             det = a.determinant();
         };
-        // run_with_time_measurement(action, time_unit::millis);
         run_with_time_measurement(action, time_unit::micros);
-        // run_with_time_measurement(action, time_unit::nanos);
 
         a.set_print_precision(0);
         a.set_print_width(2);
         std::cout << "\nmatrix A("
                   << a.get_rows() << ", " << a.get_cols()
-                  << ") det: " << det << "\n";
-        a >> std::cout;
+                  << ") \ndet: " << det << "\n\n";
+        std::cout << a;
     }
     catch(const std::exception& e)
     {

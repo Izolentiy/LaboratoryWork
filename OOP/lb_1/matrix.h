@@ -21,6 +21,9 @@ class matrix
         int col_count;             // column count of parent matrix
         int row_num;               // row number
     };
+    
+    friend std::ostream &operator<<(std::ostream &out, matrix &m);
+    friend void operator<<(const char *output_filename, matrix &m);
 
 public:
     matrix();
@@ -42,8 +45,6 @@ public:
     void operator*=(matrix &other);
     void operator*=(matrix *other);
     void operator=(const matrix &other);
-    void operator>>(std::ostream &out);
-    void operator>>(const std::string &output_filename);
     row &operator[](int row);
 
     int get_cols();

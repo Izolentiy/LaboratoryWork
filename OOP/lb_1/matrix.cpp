@@ -116,12 +116,39 @@ void matrix::export_to_scv(const std::string &filename)
     if (fout.is_open())
     {
         print_delim = ", ";
-        (*this) >> fout;
+        fout << (*this);
         print_delim = prev_delim;
     }
     fout.close();
 }
 
+std::ostream &operator<<(std::ostream &out, matrix &m)
+{
+    for (int i = 0; i < m.rows; ++i)
+    {
+        for (int j = 0; j < m.cols; ++j)
+        {
+            out << std::fixed
+                << std::setw(m.print_width)
+                << std::setprecision(m.print_prec)
+                << m.get(i, j) << m.print_delim;
+        }
+        if (i < m.rows - 1)
+            out << '\n';
+    }
+    out << std::flush;
+    return out;
+}
+
+void operator<<(const char *output_filename, matrix &m)
+{
+    std::ofstream fout(output_filename);
+    if (fout.is_open())
+    {
+        fout << m;
+    }
+    fout.close();
+}
 
 matrix matrix::operator*(matrix &other)
 {
@@ -166,37 +193,10 @@ matrix matrix::operator*(double num)
     return matrix(vec, rows, cols);
 }
 
-void matrix::operator>>(std::ostream &out)
-{
-    for (int i = 0; i < rows; ++i)
-    {
-        for (int j = 0; j < cols; ++j)
-        {
-            out << std::fixed
-                << std::setw(print_width)
-                << std::setprecision(print_prec)
-                << get(i, j) << print_delim;
-        }
-        if (i < rows - 1)
-            out << '\n';
-    }
-    out << std::flush;
-}
-
-void matrix::operator>>(const std::string &output_filename)
-{
-    std::ofstream fout(output_filename);
-    if (fout.is_open())
-    {
-        (*this) >> fout;
-    }
-    fout.close();
-}
-
 matrix matrix::operator^(int pow)
 {
     if (pow == -1)
-        return transposition();
+        return get_inverse();
     if (pow < -1)
         throw std::invalid_argument("Invalid degree indicator");
     if (rows != cols)
