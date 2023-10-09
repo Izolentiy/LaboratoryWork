@@ -1,24 +1,53 @@
 #include "str_helper.h"
-#include "matrix.h"
 #include "time_helper.hpp"
+#include "matrix.h"
 
-matrix *read(std::ifstream &fin, std::string s);
-void str_helper_test();
 void scenario_1();
 void scenario_2();
+void scenario_3();
 
 int main()
 {
-    scenario_1();
+    // scenario_1();
     // scenario_2();
+    scenario_3();
+}
+
+void scenario_3()
+{
+    try
+    {
+        matrix d("input\\matrix_D.txt");
+        matrix a("input\\matrix_A.txt");
+        double det_d = 0, det_a = 0;
+        det_d = d.determinant();
+        det_a = a.determinant();
+        a >> std::cout;
+        a >> "output\\scenario_3.txt";
+        std::cout << "\n\n";
+        
+        matrix t = d^(-1); // transpositioned
+        t >> std::cout;
+        t.export_to_scv("kek");
+        std::cout << "\n\n";
+
+        matrix k = d^2;
+        k >> std::cout;
+        std::cout << "\n\n";
+
+    }
+    catch(const std::exception& e)
+    {
+        std::cerr << e.what() << '\n';
+    }
+    
 }
 
 void scenario_2()
 {
-    std::ifstream fin("input\\matrix_A.txt");
-    if (fin.is_open()) try
+    try
     {
-        matrix a = matrix(fin);
+        matrix a = matrix("input\\matrix_A.txt");
         double det = 0.0;
 
         auto action = [&]()
@@ -34,112 +63,72 @@ void scenario_2()
         std::cout << "\nmatrix A("
                   << a.get_rows() << ", " << a.get_cols()
                   << ") det: " << det << "\n";
-        a.print_elements();
+        a >> std::cout;
     }
-    catch (const char *msg)
+    catch(const std::exception& e)
     {
-        std::cout << msg << std::endl;
+        std::cerr << e.what() << '\n';
     }
-    fin.close();
 }
 
 void scenario_1()
 {
-    std::ifstream fin;
-    try
-    {
-        matrix &a = *(read(fin, "input\\matrix_A.txt"));
-        std::cout << "\nmatrix A" << std::endl;
-        a.print_elements();
+    // std::ifstream fin;
+    // try
+    // {
+    //     matrix &a = *(read(fin, "input\\matrix_A.txt"));
+    //     std::cout << "\nmatrix A" << std::endl;
+    //     a.print_elements();
 
-        matrix *a9 = a * 9;
-        std::cout << "\nmatrix 9 * A" << std::endl;
-        a9->print_elements();
+    //     matrix *a9 = a * 9;
+    //     std::cout << "\nmatrix 9 * A" << std::endl;
+    //     a9->print_elements();
 
-        std::cout << "\nmatrix A: e[0][0] = " << a[0][0] << std::endl;
+    //     std::cout << "\nmatrix A: e[0][0] = " << a[0][0] << std::endl;
 
-        matrix *c = a.get_inverse();
-        std::cout << "\nmatrix A inverse" << std::endl;
-        c->print_elements();
+    //     matrix *c = a.get_inverse();
+    //     std::cout << "\nmatrix A inverse" << std::endl;
+    //     c->print_elements();
 
-        matrix *d = a * c;
-        std::cout << "\nmatrix A * inverse A" << std::endl;
-        d->print_elements();
+    //     matrix *d = a * c;
+    //     std::cout << "\nmatrix A * inverse A" << std::endl;
+    //     d->print_elements();
 
-        matrix *b = a.transposition();
-        std::cout << "\nmatrix A transpositioned" << std::endl;
-        b->print_elements();
+    //     matrix *b = a.transposition();
+    //     std::cout << "\nmatrix A transpositioned" << std::endl;
+    //     b->print_elements();
         
-        delete b;
-        delete d;
-        delete c;
-        delete a9;
-        std::cout << "Deleted objects" << std::endl;
+    //     delete b;
+    //     delete d;
+    //     delete c;
+    //     delete a9;
+    //     std::cout << "Deleted objects" << std::endl;
 
-        matrix &p = *(read(fin, "input\\matrix_B.txt"));
-        matrix &q = *(read(fin, "input\\matrix_C.txt"));
+    //     matrix &p = *(read(fin, "input\\matrix_B.txt"));
+    //     matrix &q = *(read(fin, "input\\matrix_C.txt"));
 
-        std::cout << "\nmatrix P" << std::endl;
-        p.print_elements();
+    //     std::cout << "\nmatrix P" << std::endl;
+    //     p.print_elements();
 
-        std::cout << "\nmatrix Q" << std::endl;
-        q.print_elements();
+    //     std::cout << "\nmatrix Q" << std::endl;
+    //     q.print_elements();
 
-        std::cout << "\nmatrix P * Q" << std::endl;
-        matrix *j = p * q;
-        j->print_elements();
+    //     std::cout << "\nmatrix P * Q" << std::endl;
+    //     matrix *j = p * q;
+    //     j->print_elements();
 
-        std::cout << "\nmatrix Q * P" << std::endl;
-        matrix *i = q * p;
-        i->print_elements();
+    //     std::cout << "\nmatrix Q * P" << std::endl;
+    //     matrix *i = q * p;
+    //     i->print_elements();
 
-        delete i;
-        delete j;
-        delete &q;
-        delete &p;
-    }
-    catch (const char *msg)
-    {
-        std::cout << msg << std::endl;
-    }
+    //     delete i;
+    //     delete j;
+    //     delete &q;
+    //     delete &p;
+    // }
+    // catch(const std::exception& e)
+    // {
+    //     std::cerr << e.what() << '\n';
+    // }
 
-}
-
-void str_helper_test()
-{
-    std::ifstream fin("input\\matrix_A.txt");
-    if (fin.is_open())
-        try
-        {
-            std::vector elements = str_helper::to_vector(fin);
-            std::cout << std::fixed << std::setprecision(0);
-            for (int i = 0; i < 4; ++i)
-            {
-                for (int j = 0; j < 4; ++j)
-                {
-                    std::cout << elements[i * 4 + j] << " ";
-                }
-                std::cout << "\n";
-            }
-
-            double result = str_helper::to_double("1234,56789");
-            std::cout << "Result: " << result << std::endl;
-        }
-        catch (char const *msg)
-        {
-            std::cout << msg << std::endl;
-        }
-    fin.close();
-}
-
-matrix *read(std::ifstream &fin, std::string s)
-{
-    matrix *m = nullptr;
-    fin.open(s);
-    if (fin.is_open())
-        m = new matrix(fin);
-    else
-        throw "Unable to open file";
-    fin.close();
-    return m;
 }

@@ -9,37 +9,37 @@ enum time_unit
     millis, micros, nanos
 };
 
-/**
- * Запуск с измерением времени
- */
 template <class T>
 void run_with_time_measurement(
     T &&algorithm,
     time_unit unit
 ) {
-    using namespace std::chrono;
+    using clock = std::chrono::high_resolution_clock;
+    using milli = std::chrono::milliseconds;
+    using micro = std::chrono::microseconds;
+    using nano = std::chrono::nanoseconds;
+    using std::chrono::duration_cast;
 
     std::string str_unit;
-    high_resolution_clock::time_point start;
-    high_resolution_clock::time_point end;
+    clock::time_point start, end;
 
-    start = high_resolution_clock::now();
+    start = clock::now();
     algorithm();
-    end = high_resolution_clock::now();
+    end = clock::now();
 
     uint64_t time;
     switch (unit)
     {
     case nanos:
-        time = duration_cast<nanoseconds>(end - start).count();
+        time = duration_cast<nano>(end - start).count();
         str_unit = "ns";
         break;
     case micros:
-        time = duration_cast<microseconds>(end - start).count();
+        time = duration_cast<micro>(end - start).count();
         str_unit = "μs";
         break;
     case millis:
-        time = duration_cast<milliseconds>(end - start).count();
+        time = duration_cast<milli>(end - start).count();
         str_unit = "ms";
         break;
     }

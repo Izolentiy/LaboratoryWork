@@ -15,7 +15,6 @@ bool str_helper::is_delim(char ch)
 }
 
 /**
- * @throw "Invalid input"
  * @return delimeter position
  */
 size_t str_helper::validate(std::string str)
@@ -26,7 +25,7 @@ size_t str_helper::validate(std::string str)
     size_t dpos = std::string::npos; // delimeter position
 
     if (is_delim(str[0]) || is_delim(str[str.size() - 1]))
-        throw "Invalid input";
+        throw std::runtime_error("Invalid input");
 
     for (size_t i = 0; i < str.size(); ++i)
     {
@@ -45,14 +44,11 @@ size_t str_helper::validate(std::string str)
             is_num = false;
         }
         if (!is_num)
-            throw "Invalid input";
+            throw std::runtime_error("Invalid input");
     }
     return dpos;
 }
 
-/**
- * @throw "Invalid input"
- */
 double str_helper::to_double(std::string str)
 {
     double res = 0;              // result
@@ -79,15 +75,12 @@ double str_helper::to_double(std::string str)
         res += cur * std::pow(10, --ic);
     }
 
-    // std::cout << "ic " << ic << std::endl;
-    // std::cout << "dc " << dc << std::endl;
-
     return res;
 }
 
 /**
  * Add elements to vector from string
- * @throw "Invalid input"
+ * @throw std::logic_error
  * @param dest destination for elements
  * @param str source string
  **/
@@ -118,9 +111,6 @@ void str_helper::add_elements(std::vector<double> &dest, std::string &str)
     }
 }
 
-/**
- * @throw "Invalid input"
- */
 std::vector<double> str_helper::to_vector(std::ifstream &fin)
 {
     std::string str;         // string
@@ -169,7 +159,7 @@ std::vector<double> str_helper::to_vector(std::ifstream &fin)
         }
         else if (cols != cur_cols)
         {
-            throw "Invalid input";
+            throw std::runtime_error("Invalid input");
         }
         ++rows;
     }
