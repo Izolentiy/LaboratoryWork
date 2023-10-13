@@ -16,7 +16,7 @@ int main()
     // scenario_2();
     // scenario_3();
     // scenario_4();
-    // task();
+    task();
     // double_converter_test();
     // interpreter_test();
 }
@@ -98,20 +98,22 @@ void task()
         matrix b("input\\matrix-B.txt");
         matrix x;
 
-        // 2.7 * At * X = 2 * B;
-        // X = (2.7 * At)^(-1) * 2 * B;
-        std::cout << "(2.7 * At)^(-1)\n";
-        std::cout << ((a * 2.7).transposed() ^ -1) << "\n\n";
-        std::cout << "B * 2\n";
-        std::cout << b * 2 << "\n\n";
+        std::cout << "A\n";
+        std::cout << a << "\n\n";
+        std::cout << "A^(-1)\n";
+        std::cout << (a ^ -1) << "\n\n";
+        std::cout << "B\n";
+        std::cout << b << "\n\n";
 
-        x = (a ^ -1) * (b);
-        std::cout << "Test"
-                  << "\n";
+        std::cout << "Test\n";
         std::cout << (a ^ -1) * a << "\n\n";
+
+        x = (a ^ -1) * b;
         std::cout << "X\n";
         std::cout << x;
+
         "output\\x.txt" << x;
+        x.export_to_csv("output\\x.csv");
     }
     catch (const std::exception &e)
     {

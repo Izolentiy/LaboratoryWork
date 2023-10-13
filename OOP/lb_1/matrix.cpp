@@ -111,14 +111,20 @@ matrix matrix::inversed()
     return matrix(vec, rows, rows);
 }
 
-void matrix::export_to_csv(const std::string &filename)
+void matrix::export_to_csv(const std::string &name)
 {
-    std::ofstream fout(filename + ".scv");
-    std::string prev_delim = print_delim;
+    using std::string;
+    string ext = name.substr(name.size() - 4, 4);
+    string out_ext = ".csv"; // out extension of file
+    string out_name = name;
+    if (ext != out_ext)
+        out_name += out_ext;
+
+    std::ofstream fout(out_name);
+    string prev_delim = print_delim;
     if (fout.is_open())
     {
         print_delim = ", ";
-        fout << (*this);
         fout << (*this);
         print_delim = prev_delim;
     }
@@ -300,8 +306,6 @@ matrix::~matrix()
 
 double matrix::get_alg_com(int row, int col)
 {
-    if (get(row, col) == 0)
-        return 0;
     if (rows == 1)
         return 1; // matrix 1 x 1
 
