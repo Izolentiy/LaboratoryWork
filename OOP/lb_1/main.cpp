@@ -5,12 +5,144 @@
 void scenario_1();
 void scenario_2();
 void scenario_3();
+void scenario_4();
+void double_converter_test();
+void interpreter_test();
+void task();
 
 int main()
 {
     // scenario_1();
     // scenario_2();
-    scenario_3();
+    // scenario_3();
+    // scenario_4();
+    // task();
+    // double_converter_test();
+    // interpreter_test();
+}
+
+void double_converter_test()
+{
+    struct text_test_case
+    {
+        std::string name;
+        std::string given;
+        double expected;
+    };
+    std::vector<text_test_case> test_cases = {
+        {"integer_negative", "-42", -42},
+        {"decimal_negative", "-42.234", -42.234},
+        {"whitespace", " ", nan("")},
+        {"just_minus", "-", nan("")},
+        {"starts_with_dot", ".234", nan("")},
+        {"ends_with_dot", "42.", nan("")},
+        {"too_many_dots", "4..23", nan("")},
+        {"one_digit_positive", "3", 3},
+        {"one_digit_negative", "-3", -3},
+        {"too_many_minuses", "-4-2.23", nan("")},
+        {"some_random_number", "10101.402", 10101.402},
+    };
+    for (text_test_case &t : test_cases)
+    {
+        std::string status;
+        double result;
+        try
+        {
+            result = str_helper::to_double(t.given);
+        }
+        catch (const std::exception &e)
+        {
+            result = nan("");
+        }
+
+        // both are NaN
+        if (t.expected != t.expected && result != result)
+            status = "PASS";
+        // both are equal
+        else if (t.expected == result)
+            status = "PASS";
+        else
+            status = "FAILURE";
+
+        std::cout << t.name << "   " << status << '\n';
+        if (status == "FAILURE")
+        {
+            std::cout << "  expected: " << t.expected
+                      << "    result: " << result << "\n\n";
+        }
+    }
+}
+
+void interpreter_test()
+{
+    try
+    {
+        matrix c("input\\interpreter_test.txt");
+        c.set_print_width(8);
+        c.set_print_precision(3);
+        std::cout << "matrix C\n";
+        std::cout << c << "\n\n";
+    }
+    catch(const std::exception& e)
+    {
+        std::cerr << e.what() << '\n';
+    }
+    
+}
+
+void task()
+{
+    try
+    {
+        matrix a("input\\matrix-A.txt");
+        matrix b("input\\matrix-B.txt");
+        matrix x;
+
+        // 2.7 * At * X = 2 * B;
+        // X = (2.7 * At)^(-1) * 2 * B;
+        std::cout << "(2.7 * At)^(-1)\n";
+        std::cout << ((a * 2.7).transposed() ^ -1) << "\n\n";
+        std::cout << "B * 2\n";
+        std::cout << b * 2 << "\n\n";
+
+        x = (a ^ -1) * (b);
+        std::cout << "Test"
+                  << "\n";
+        std::cout << (a ^ -1) * a << "\n\n";
+        std::cout << "X\n";
+        std::cout << x;
+        "output\\x.txt" << x;
+    }
+    catch (const std::exception &e)
+    {
+        std::cerr << e.what() << '\n';
+    }
+}
+
+void scenario_4()
+{
+    try
+    {
+        matrix d("input\\matrix_D.txt");
+        matrix a("input\\matrix_A.txt");
+        std::cout << " ~~~ A and D created\n\n";
+
+        matrix c = d; // copy constructor
+        std::cout << " ~~~ C copied from D\n\n";
+        std::cout << c[0][0] << " " << d[0][0] << std::endl;
+        c[0][0] = 1;
+        std::cout << c[0][0] << " " << d[0][0] << std::endl;
+
+        a = d; // assignment operator
+        std::cout << " ~~~ D assigned to A\n\n";
+        std::cout << a[0][0] << " " << d[0][0] << std::endl;
+        a[0][0] = 1;
+        std::cout << a[0][0] << " " << d[0][0] << std::endl;
+    }
+    catch (const std::exception &e)
+    {
+        std::cerr << e.what() << '\n';
+    }
 }
 
 void scenario_3()
@@ -22,25 +154,22 @@ void scenario_3()
         double det_d = 0, det_a = 0;
         det_d = d.determinant();
         det_a = a.determinant();
-        a >> std::cout;
-        a >> "output\\scenario_3.txt";
-        std::cout << "\n\n";
-        
-        matrix t = d^(-1); // transpositioned
-        t >> std::cout;
-        t.export_to_scv("kek");
-        std::cout << "\n\n";
+        std::cout << a << "\n\n";
+        "output\\scenario_3.txt" << a;
 
-        matrix k = d^2;
-        k >> std::cout;
-        std::cout << "\n\n";
+        matrix t = d ^ (-1); // inverse
+        std::cout << t << "\n\n";
+        t.export_to_csv("kek");
 
+        matrix k = d ^ 2;
+        std::cout << k << "\n\n";
+
+        "output\\scenario_3.txt" << k;
     }
-    catch(const std::exception& e)
+    catch (const std::exception &e)
     {
         std::cerr << e.what() << '\n';
     }
-    
 }
 
 void scenario_2()
@@ -54,18 +183,16 @@ void scenario_2()
         {
             det = a.determinant();
         };
-        // run_with_time_measurement(action, time_unit::millis);
         run_with_time_measurement(action, time_unit::micros);
-        // run_with_time_measurement(action, time_unit::nanos);
 
         a.set_print_precision(0);
         a.set_print_width(2);
         std::cout << "\nmatrix A("
                   << a.get_rows() << ", " << a.get_cols()
-                  << ") det: " << det << "\n";
-        a >> std::cout;
+                  << ") \ndet: " << det << "\n\n";
+        std::cout << a;
     }
-    catch(const std::exception& e)
+    catch (const std::exception &e)
     {
         std::cerr << e.what() << '\n';
     }
@@ -97,7 +224,7 @@ void scenario_1()
     //     matrix *b = a.transposition();
     //     std::cout << "\nmatrix A transpositioned" << std::endl;
     //     b->print_elements();
-        
+
     //     delete b;
     //     delete d;
     //     delete c;
@@ -130,5 +257,4 @@ void scenario_1()
     // {
     //     std::cerr << e.what() << '\n';
     // }
-
 }

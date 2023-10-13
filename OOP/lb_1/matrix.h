@@ -18,38 +18,44 @@ class matrix
 
     private:
         std::vector<double> &data; // data of parent matrix
-        int col_count;             // column count of parent matrix
+        int &col_count;            // column count of parent matrix
         int row_num;               // row number
     };
+    
+    friend std::ostream &operator<<(std::ostream &out, const matrix &m);
+    friend void operator<<(const char *output_filename, const matrix &m);
 
 public:
-    matrix();
+    matrix() = default;
     matrix(int rows, int cols);
     matrix(std::vector<double> elems, int rows, int cols);
     matrix(const std::string &input_filename);
     matrix(const matrix &matrix);
 
     double determinant();
-    matrix transposition();
-    matrix get_inverse();
-    void export_to_scv(const std::string &filename);
+    matrix transposed();
+    matrix inversed();
+    void export_to_csv(const std::string &filename);
 
-    matrix operator*(matrix &other);
-    matrix operator*(matrix *other);
-    matrix operator*(double num);
+    // matrix a;
+    // a << "s";
+    // std::cout << a;
+
     matrix operator^(int pow);
-    void operator*=(double num);
-    void operator*=(matrix &other);
+    matrix operator*(matrix *other);
+    matrix operator*(const matrix &other);
+    matrix operator*(double num);
     void operator*=(matrix *other);
-    void operator=(const matrix &other);
-    void operator>>(std::ostream &out);
-    void operator>>(const std::string &output_filename);
+    void operator*=(const matrix &other);
+    void operator*=(double num);
+    matrix &operator=(const matrix &other);
     row &operator[](int row);
 
-    int get_cols();
-    int get_rows();
+    int get_cols() const;
+    int get_rows() const;
     int get_print_precision();
     int get_print_width();
+    void set_print_delimeter(const std::string &delim);
     void set_print_precision(int prec);
     void set_print_width(int width);
 
@@ -62,10 +68,10 @@ private:
     int print_width = 6;           // print width
     std::string print_delim = " "; // print delimeter
     std::vector<double> elems;     // elements
-    row rp = row(elems, cols);     // row proxy
+    row proxy = row(elems, cols);  // row proxy
 
     double get_alg_com(int row, int col); // algebraic complement
-    matrix &get_minor(int row, int col, std::vector<matrix *>);
+    double get_minor(int row, int col, std::vector<matrix *>);
     double &get(int row, int col); // index starts with 0
-    void copy_from(const matrix &other);
+    double get(int row, int col) const;
 };

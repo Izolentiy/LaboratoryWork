@@ -14,6 +14,22 @@ bool str_helper::is_delim(char ch)
     return false;
 }
 
+bool str_helper::is_number_char(char ch)
+{
+    if (is_delim(ch) || is_digit(ch) || ch == '-')
+        return true;
+    return false;
+}
+
+size_t str_helper::count(std::string &str, char ch)
+{
+    size_t count = 0, i = 0;
+    while (i < str.size())
+        if (str[i++] == ch)
+            ++count;
+    return count;
+}
+
 /**
  * @return delimeter position
  */
@@ -24,6 +40,8 @@ size_t str_helper::validate(std::string str)
     double res = 0;                  // result
     size_t dpos = std::string::npos; // delimeter position
 
+    if (str.size() == 1 && str[0] == '-')
+        throw std::runtime_error("Invalid input");
     if (is_delim(str[0]) || is_delim(str[str.size() - 1]))
         throw std::runtime_error("Invalid input");
 
@@ -35,14 +53,13 @@ size_t str_helper::validate(std::string str)
             dpos = i;
             continue;
         }
+        else if (str[i] == '-' && i != 0)
+            is_num = false;
         else if (df && is_delim(str[i]))
-        {
             is_num = false;
-        }
-        else if (!is_digit(str[i]))
-        {
+        else if (!is_number_char(str[i]))
             is_num = false;
-        }
+
         if (!is_num)
             throw std::runtime_error("Invalid input");
     }
@@ -51,6 +68,7 @@ size_t str_helper::validate(std::string str)
 
 double str_helper::to_double(std::string str)
 {
+    bool neg = str[0] == '-';    // negative
     double res = 0;              // result
     size_t dpos = validate(str); // delimeter position
 
@@ -59,21 +77,23 @@ double str_helper::to_double(std::string str)
     int dc = 0;      // -decimal count
     if (dpos != std::string::npos)
     {
-        ic = dpos;
+        ic = dpos - neg;
         dc = (dpos + 1) - str.size();
     }
     else
     {
-        ic = str.size();
+        ic = str.size() - neg;
         dc = 0;
     }
     for (size_t i = 0; ic > dc; ++i)
     {
-        if (is_delim(str[i]))
+        if (str[i] == '-' || is_delim(str[i]))
             continue;
         cur = str[i] - '0';
         res += cur * std::pow(10, --ic);
     }
+    if (neg)
+        res = -res;
 
     return res;
 }
@@ -92,12 +112,12 @@ void str_helper::add_elements(std::vector<double> &dest, std::string &str)
 
     for (size_t i = 0; i < str.size(); ++i)
     {
-        if (is_digit(str[i]) || is_delim(str[i]) && !ns)
+        if (is_number_char(str[i]) && !ns)
         {
             bpos = i;
             ns = true;
         }
-        else
+        else if (!is_number_char(str[i]) && ns)
         {
             epos = i;
             ns = false;
@@ -109,60 +129,4 @@ void str_helper::add_elements(std::vector<double> &dest, std::string &str)
         temp = to_double(str.substr(bpos, epos - bpos));
         dest.push_back(temp);
     }
-}
-
-std::vector<double> str_helper::to_vector(std::ifstream &fin)
-{
-    std::string str;         // string
-    std::vector<double> vec; // elements
-    int rows = 0;
-    int cols = 0;
-
-    while (std::getline(fin, str))
-    {
-        size_t bpos = 0, epos = 0; // begin/end position
-        bool ns = false;           // number started
-        double temp = 0;           // temp value
-
-        // std::cout << str << std::endl;
-        int cur_cols = 0;
-        for (size_t i = 0; i < str.size(); ++i)
-        {
-            if (ns)
-            {
-                if (str[i] == ' ')
-                    epos = i;
-                else if (i == str.size() - 1)
-                    epos = i + 1;
-                else
-                    continue;
-                ns = false;
-                temp = to_double(str.substr(bpos, epos - bpos));
-                vec.push_back(temp);
-                ++cur_cols;
-            }
-            else if (is_digit(str[i]))
-            {
-                bpos = i;
-                ns = true;
-                if (i == str.size() - 1)
-                {
-                    temp = to_double(str.substr(bpos, 1));
-                    vec.push_back(temp);
-                    ++cur_cols;
-                }
-            }
-        }
-        if (rows == 0)
-        {
-            cols = cur_cols;
-        }
-        else if (cols != cur_cols)
-        {
-            throw std::runtime_error("Invalid input");
-        }
-        ++rows;
-    }
-
-    return vec;
 }
