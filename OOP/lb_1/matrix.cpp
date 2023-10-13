@@ -119,6 +119,7 @@ void matrix::export_to_csv(const std::string &filename)
     {
         print_delim = ", ";
         fout << (*this);
+        fout << (*this);
         print_delim = prev_delim;
     }
     fout.close();
