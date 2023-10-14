@@ -71,7 +71,7 @@ private:
     row proxy = row(elems, cols);  // row proxy
 
     double get_alg_com(int row, int col); // algebraic complement
-    double get_minor(int row, int col, std::vector<matrix *>);
+    double get_minor(int row, int col);
     double &get(int row, int col); // index starts with 0
     double get(int row, int col) const;
 };

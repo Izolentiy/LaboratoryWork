@@ -100,8 +100,10 @@ void task()
 
         std::cout << "A\n";
         std::cout << a << "\n\n";
+
         std::cout << "A^(-1)\n";
         std::cout << (a ^ -1) << "\n\n";
+
         std::cout << "B\n";
         std::cout << b << "\n\n";
 

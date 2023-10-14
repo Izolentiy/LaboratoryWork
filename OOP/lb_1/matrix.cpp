@@ -46,38 +46,38 @@ matrix::matrix(const std::string &input_filename)
 
 matrix::matrix(const matrix &other)
 {
-    std::cout << "Copy ctor called" << std::endl;
+    // std::cout << "Copy ctor called" << std::endl;
     (*this) = other;
 }
 
-/**
- * Чтобы найти определитель, можно воспользоваться
- * метдом разложения по строке/столбцу.
- * Или же методом Гаусса
- * TODO: Реализовать метод Гаусса
- *
- * Но перед этим стоит сделать проверку, на частные
- * случаи (матрица 2 на 2, не квадратная матрица)
- *
- * Метод разложения по строке:
- * 1. Выбираем строку
- * 2. Находим алгебраические дополнения к элементам
- * 3. Складываем произведения элементов на алг. доп. к ним
- * 4. Возвращаем определитель
- */
 double matrix::determinant()
 {
     if (rows != cols) // не квадратная матрица
         throw std::logic_error("Non square matrix");
     if (rows == 0)
         return 0;
-    if (rows == 2) // частный случай
+    if (rows == 1)
+        return elems[0];
+    if (rows == 2)
         return elems[0] * elems[3] - elems[1] * elems[2];
 
-    double result = 0.0;
-    for (int i = 0; i < cols; ++i)
+    matrix t = (*this); // create a copy of given matrix;
+
+    double result = t[0][0];
+    double mult = 0;
+    int n = 0;
+    for (int i = 0; i < cols-1; ++i)
     {
-        result += get_alg_com(0, i) * elems[i];
+        for (int j = n + 1; j < rows; ++j)
+        {
+            mult = t[j][i] / t[n][i];
+            for (int k = n; k < cols; ++k)
+            {
+                t[j][k] -= t[n][k] * mult;
+            }
+        }
+        ++n;
+        result *= t[n][n];
     }
     return result;
 }
@@ -309,30 +309,15 @@ double matrix::get_alg_com(int row, int col)
     if (rows == 1)
         return 1; // matrix 1 x 1
 
-    static std::vector<matrix *> low_matrices;
-    if (low_matrices.size() < rows - 2)
-    {
-        static int high_order = 2;
-        while(high_order < rows)
-        {
-            // std::cout << "Add new matrix to low matrices" << std::endl;
-            low_matrices.push_back(new matrix(high_order, high_order));
-            high_order++;
-        }
-    }
-
-    double result = get_minor(row, col, low_matrices);
+    double result = get_minor(row, col);
     if ((row + col) % 2 != 0)
         result = -result;
 
     return result;
 }
 
-double matrix::get_minor(
-    int row, int col, std::vector<matrix *> low_matrices
-) {
-    matrix &low_matrix = (*low_matrices[rows - 3]);
-    int k = 0;
+double matrix::get_minor(int row, int col) {
+    std::vector<double> vec;
     for (int i = 0; i < rows; ++i)
     {
         if (i == row)
@@ -341,11 +326,12 @@ double matrix::get_minor(
         {
             if (j != col)
             {
-                low_matrix.elems[k++] = this->get(i, j);
+                vec.push_back(get(i, j));
             }
         }
     }
-    return low_matrix.determinant();
+    matrix t(vec, rows - 1, rows - 1);
+    return t.determinant();
 }
 
 double &matrix::get(int row, int col)
