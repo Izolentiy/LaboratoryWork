@@ -5,6 +5,10 @@
 #include <fstream>
 #include <cmath>
 
+// for printing double num
+constexpr double ZERO_EPSILON = 1E-14;
+constexpr double REL_EPSILON = 1E-7;
+
 namespace str_helper
 {
     bool is_digit(char ch);

@@ -137,10 +137,14 @@ std::ostream &operator<<(std::ostream &out, const matrix &m)
     {
         for (int j = 0; j < m.cols; ++j)
         {
+            double elem = m.get(i, j);
+            double delta = std::abs(elem - 0);
+            if (delta < ZERO_EPSILON)
+                elem = 0;
             out << std::fixed
                 << std::setw(m.print_width)
                 << std::setprecision(m.print_prec)
-                << m.get(i, j) << m.print_delim;
+                << elem << m.print_delim;
         }
         if (i < m.rows - 1)
             out << '\n';
