@@ -16,9 +16,9 @@ int main()
     // scenario_2();
     // scenario_3();
     // scenario_4();
-    task();
+    // task();
     // double_converter_test();
-    // interpreter_test();
+    interpreter_test();
 }
 
 void double_converter_test()
@@ -57,37 +57,77 @@ void double_converter_test()
 
         // both are NaN
         if (t.expected != t.expected && result != result)
-            status = "PASS";
+            status = PASS;
         // both are equal
         else if (t.expected == result)
-            status = "PASS";
+            status = PASS;
         else
-            status = "FAILURE";
+            status = FAILURE;
 
         std::cout << t.name << "   " << status << '\n';
-        if (status == "FAILURE")
-        {
-            std::cout << "  expected: " << t.expected
-                      << "    result: " << result << "\n\n";
-        }
+        if (status == FAILURE)
+            str_helper::print_diff("", t.expected, result); 
     }
 }
 
 void interpreter_test()
 {
-    try
+    using str_helper::compare;
+    using str_helper::print_diff;
+    struct interpreter_test_case
     {
-        matrix c("input\\interpreter_test.txt");
-        c.set_print_width(8);
-        c.set_print_precision(3);
-        std::cout << "matrix C\n";
-        std::cout << c << "\n\n";
-    }
-    catch(const std::exception& e)
+        std::string filename;
+        int expected_rows;
+        int expected_cols;
+        bool expected_invalid;
+    };
+    std::vector<interpreter_test_case> test_cases = {
+        {"just_minus_among_nums.txt", 0, 0, true},
+        {"missing_num_in_row.txt", 0, 0, true},
+        {"extra_num_in_row.txt", 0, 0, true},
+        {"matrix_1x1.txt", 1, 1, false},
+        {"matrix_1x3.txt", 1, 3, false},
+        {"matrix_2x2.txt", 2, 2, false},
+        {"matrix_3x1.txt", 3, 1, false},
+        {"matrix_4x5.txt", 4, 5, false},
+    };
+    for (interpreter_test_case &t : test_cases)
     {
-        std::cerr << e.what() << '\n';
+        bool valid_match = true;
+        bool cols_match = true;
+        bool rows_match = true;
+        std::string status = FAILURE;
+        std::string filename;
+        matrix m;
+        try
+        {
+            filename = "test_cases\\" + t.filename;
+            m = matrix(filename);
+            if (t.expected_invalid)
+                valid_match = false;
+            if (m.get_cols() != t.expected_cols)
+                cols_match = false;
+            if (m.get_rows() != t.expected_rows)
+                rows_match = false;
+        }
+        catch(const std::exception& e)
+        {
+            if (compare(e.what(), UNABLE_TO_OPEN_FILE))
+                std::cerr << e.what() << " : " << filename << '\n';
+            if (compare(e.what(), INVALID_INPUT) && !t.expected_invalid)
+                valid_match = false;
+        }
+        if (valid_match && cols_match && rows_match)
+            status = PASS;
+        std::cout << t.filename << "   " << status << '\n';
+
+        if (!cols_match)
+            print_diff("COLS", t.expected_cols, m.get_cols());
+        if (!rows_match)
+            print_diff("ROWS", t.expected_rows, m.get_rows());
+        if (!valid_match)
+            print_diff("INVALID", t.expected_invalid, !t.expected_invalid);
     }
-    
 }
 
 void task()

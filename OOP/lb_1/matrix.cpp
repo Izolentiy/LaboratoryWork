@@ -32,11 +32,11 @@ matrix::matrix(const std::string &input_filename)
         if (rows == 0)
             cols = cur_cols;
         else if (cols != cur_cols)
-            throw std::runtime_error("Invalid input");
+            throw std::runtime_error(INVALID_INPUT);
 
         ++rows;
     }
-    else throw std::runtime_error("Unable to open file");
+    else throw std::runtime_error(UNABLE_TO_OPEN_FILE);
     fin.close();
 
     this->cols = cols;
@@ -53,7 +53,7 @@ matrix::matrix(const matrix &other)
 double matrix::determinant()
 {
     if (rows != cols) // не квадратная матрица
-        throw std::logic_error("Non square matrix");
+        throw std::logic_error(NON_SQUARE_MATRIX);
     if (rows == 0)
         return 0;
     if (rows == 1)
@@ -99,7 +99,7 @@ matrix matrix::inversed()
 {
     double det = determinant();
     if (det == 0)
-        throw std::logic_error("Degenerate matrix");
+        throw std::logic_error(DEGENERATE_MATRIX);
     std::vector<double> vec(rows * rows);
     for (int i = 0; i < rows; ++i)
     {
@@ -169,7 +169,7 @@ matrix matrix::operator*(const matrix &other)
     int ocols = other.get_cols(); // other columns
 
     if (this->cols != orows)
-        throw std::logic_error("Multiplication is not applicable");
+        throw std::logic_error(MULTIPLICATION_IS_NOT_APPLICABLE);
     std::vector<double> res(rows * ocols);
 
     for (int i = 0; i < rows; ++i)
@@ -208,9 +208,9 @@ matrix matrix::operator^(int pow)
     if (pow == -1)
         return inversed();
     if (pow < -1)
-        throw std::invalid_argument("Invalid degree indicator");
+        throw std::invalid_argument(INVALID_DEGREEE_INDICATOR);
     if (rows != cols)
-        throw std::logic_error("Non square matrix");
+        throw std::logic_error(NON_SQUARE_MATRIX);
 
     matrix res(*this);
     if (pow == 0)

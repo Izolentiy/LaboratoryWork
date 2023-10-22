@@ -41,9 +41,9 @@ size_t str_helper::validate(std::string str)
     size_t dpos = std::string::npos; // delimeter position
 
     if (str.size() == 1 && str[0] == '-')
-        throw std::runtime_error("Invalid input");
+        throw std::runtime_error(INVALID_INPUT);
     if (is_delim(str[0]) || is_delim(str[str.size() - 1]))
-        throw std::runtime_error("Invalid input");
+        throw std::runtime_error(INVALID_INPUT);
 
     for (size_t i = 0; i < str.size(); ++i)
     {
@@ -61,7 +61,7 @@ size_t str_helper::validate(std::string str)
             is_num = false;
 
         if (!is_num)
-            throw std::runtime_error("Invalid input");
+            throw std::runtime_error(INVALID_INPUT);
     }
     return dpos;
 }
@@ -129,4 +129,13 @@ void str_helper::add_elements(std::vector<double> &dest, std::string &str)
         temp = to_double(str.substr(bpos, epos - bpos));
         dest.push_back(temp);
     }
+}
+
+bool str_helper::compare(const char *s1, const char *s2)
+{
+    for (size_t i = 0; s1[i] == s2[i]; ++i)
+    {
+        if (s1[i] == '\0') return true;
+    }
+    return false;
 }
