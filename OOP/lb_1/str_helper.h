@@ -16,6 +16,7 @@ const char * const NON_SQUARE_MATRIX = "Non square matrix";
 const char * const DEGENERATE_MATRIX = "Degenerate matrix";
 const char * const MULTIPLICATION_IS_NOT_APPLICABLE = "Multiplication is not applicable";
 const char * const INVALID_DEGREEE_INDICATOR = "Invalid degree indicator";
+const char * const OUT_OF_RANGE = "Out of range";
 
 // test statuses
 const char * const FAILURE = "FAILURE";

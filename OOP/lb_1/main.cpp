@@ -17,7 +17,7 @@ int main()
     // scenario_3();
     // scenario_4();
     // task();
-    // double_converter_test();
+    double_converter_test();
     interpreter_test();
 }
 
@@ -120,6 +120,7 @@ void interpreter_test()
         if (valid_match && cols_match && rows_match)
             status = PASS;
         std::cout << t.filename << "   " << status << '\n';
+        // std::cout << m << "\n\n";
 
         if (!cols_match)
             print_diff("COLS", t.expected_cols, m.get_cols());

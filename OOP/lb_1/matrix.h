@@ -20,6 +20,7 @@ class matrix
         std::vector<double> &data; // data of parent matrix
         int &col_count;            // column count of parent matrix
         int row_num;               // row number
+        void check_range(int col);
     };
     
     friend std::ostream &operator<<(std::ostream &out, const matrix &m);
@@ -36,10 +37,6 @@ public:
     matrix transposed();
     matrix inversed();
     void export_to_csv(const std::string &filename);
-
-    // matrix a;
-    // a << "s";
-    // std::cout << a;
 
     matrix operator^(int pow);
     matrix operator*(matrix *other);
@@ -74,4 +71,5 @@ private:
     double get_minor(int row, int col);
     double &get(int row, int col); // index starts with 0
     double get(int row, int col) const;
+    void check_range(int row);
 };

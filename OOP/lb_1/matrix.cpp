@@ -84,12 +84,12 @@ double matrix::determinant()
 
 matrix matrix::transposed()
 {
-    std::vector<double> vec;
+    std::vector<double> vec(cols * rows);
     for (int i = 0; i < rows; ++i)
     {
         for (int j = 0; j < cols; ++j)
         {
-            vec.push_back(elems[j * rows + i]);
+            vec[j * rows + i] = elems[j * rows + i];
         }
     }
     return matrix(vec, cols, rows);
@@ -195,10 +195,10 @@ matrix matrix::operator*(matrix *other)
 
 matrix matrix::operator*(double num)
 {
-    std::vector<double> vec;
+    std::vector<double> vec(rows * cols);
     for (int i = 0; i < rows * cols; ++i)
     {
-        vec.push_back(elems[i] * num);
+        vec[i] = elems[i] * num;
     }
     return matrix(vec, rows, cols);
 }
@@ -263,10 +263,16 @@ matrix &matrix::operator=(const matrix &other)
 
 matrix::row &matrix::operator[](int row)
 {
+    matrix::check_range(row);
     proxy.row_num = row;
     return proxy;
 }
 
+void matrix::check_range(int row)
+{
+    if (row < 0 || row > rows)
+        throw std::out_of_range(OUT_OF_RANGE);
+}
 
 int matrix::get_cols() const
 {
@@ -321,7 +327,10 @@ double matrix::get_alg_com(int row, int col)
 }
 
 double matrix::get_minor(int row, int col) {
-    std::vector<double> vec;
+    int dim = rows - 1;
+    std::vector<double> vec(dim * dim);
+
+    int k = 0;
     for (int i = 0; i < rows; ++i)
     {
         if (i == row)
@@ -330,11 +339,11 @@ double matrix::get_minor(int row, int col) {
         {
             if (j != col)
             {
-                vec.push_back(get(i, j));
+                vec[k++] = get(i, j);
             }
         }
     }
-    matrix t(vec, rows - 1, rows - 1);
+    matrix t(vec, dim, dim);
     return t.determinant();
 }
 
@@ -356,7 +365,14 @@ matrix::row::row(std::vector<double> &d, int &cc)
 
 double &matrix::row::operator[](int col)
 {
+    row::check_range(col);
     return data[row_num * col_count + col];
+}
+
+void matrix::row::check_range(int col)
+{
+    if (col < 0 || col > col_count)
+        throw std::out_of_range(OUT_OF_RANGE);
 }
 
 matrix::row::~row()
