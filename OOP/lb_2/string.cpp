@@ -16,11 +16,6 @@ my::string::string(const my::string &other) {
     i_nt = other.i_nt;
 }
 
-/**
- * !Память будет очищена после вызова деструктора!
- * Если нужен массив, который переживет экземпляр,
- * использовать as_new_cstring()
- */
 char *my::string::as_cstring() const{
     return data;
 }
@@ -30,10 +25,6 @@ char *my::string::as_new_cstring() const {
     for (size_t i = 0; i < i_nt + 1; ++i)
         copy[i] = data[i];
     return copy;
-}
-
-bool my::string::operator==(const my::string &other) {
-    return str_cmp(data, other.data);
 }
 
 uint32_t my::string::hash_code() {
@@ -59,7 +50,39 @@ void my::string::xor_helper(uint32_t &hash, int bound, char *&pcb) {
     hash = hash ^ xor_pair;
 }
 
+void my::string::resize(size_t new_size) {
+    char *new_data = new char[new_size];
+    size_t i;
+    for (i = 0; i < new_size - 1; ++i) {
+        if (data[i] == '\0')
+            break;
+        new_data[i] = data[i];
+    }
+    new_data[i_nt = i] = '\0';
+    delete[] data;
+    data = new_data;
+}
+
+void my::string::resize_to_fit(const char *str) {
+    resize_to_fit(str_len(str));
+}
+
+void my::string::resize_to_fit(size_t char_count) {
+    size_t free = size - i_nt; // free space
+
+    // check if there is enough space
+    if (free < char_count) {
+        size_t new_size = size + char_count - free;
+        resize(new_size + ADD_CHUNK);
+    }
+}
+
+bool my::string::operator==(const my::string &other) {
+    return str_cmp(data, other.data);
+}
+
 my::string &my::string::operator+(const char *other) {
+    resize_to_fit(other);
     size_t j = -1;
     while (other[++j] != '\0') {
         data[i_nt + j] = other[j];
@@ -69,6 +92,9 @@ my::string &my::string::operator+(const char *other) {
 }
 
 my::string &my::string::operator+(int num) {
+    // INT_MIN (4 byte) consist of 11 chars
+    resize_to_fit(11);
+    
     uint8_t dc = 0; // digit count - 1
     if (num < 0) {
         num = ~num + 1;
@@ -86,43 +112,42 @@ my::string &my::string::operator+(int num) {
     return *this;
 }
 
-my::string::~string() {
-    delete[] data;
-    data = nullptr;
-}
-
-/**
- * @return индекс первого символа вхождения
- */
-size_t my::string::find(const char *str) {
-    size_t i = 0, diffs = 0;
-    while (data[i] != '\0') {
-        if (str[i] == '\0') {
-            do {
-                ++i;
-                ++diffs;
-            } while (data[i] != '\0');
-            return diffs;
-        }
-        if (data[i] != str[i])
-            ++diffs;
-        ++i;
-    }
-    while (str[i] != '\0') {
-        ++i;
-        ++diffs;
-    }
-    return diffs;
-}
-
 my::string &my::string::operator+(char ch) {
+    resize_to_fit(1);
     data[i_nt] = ch;
     data[++i_nt] = '\0';
     return *this;
 }
 
+my::string &my::string::operator+(const my::string &other) {
+    return (*this) + other.as_cstring();
+}
+
+size_t my::string::find(const char *str) {
+    if (str_len(str) > i_nt)
+        return npos;
+    size_t k = 0; // index for data
+    size_t j = 0; // index for str to find
+    for (size_t i = 0; i < i_nt; ++i) {
+        if (data[i] == str[0]) {
+            k = i;
+            while (data[++k] == str[++j]);
+            if (str[j] == '\0') {
+                return i;
+            }
+            j = 0;
+        }
+    }
+    return npos;
+}
+
 void my::string::clear() {
     data[i_nt = 0] = '\0';
+}
+
+my::string::~string() {
+    delete[] data;
+    data = nullptr;
 }
 
 std::ostream &my::operator<<(std::ostream &out, const my::string &str) {
