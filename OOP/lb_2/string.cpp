@@ -36,6 +36,29 @@ bool my::string::operator==(const my::string &other) {
     return str_cmp(data, other.data);
 }
 
+uint32_t my::string::hash_code() {
+    uint32_t hash = 0x00000000;
+
+    char *pcb = data;     // pointer to current byte
+    size_t ic = i_nt / 4; // iteration count
+
+    while (ic-- > 0) {
+        xor_helper(hash, 4, pcb);
+    }
+    xor_helper(hash, i_nt % 4, pcb);
+    return hash;
+}
+
+void my::string::xor_helper(uint32_t &hash, int bound, char *&pcb) {
+    uint32_t xor_pair = 0x00000000;
+    for (int j = bound; j > 0; --j) {
+        uint8_t cb = *pcb;
+        xor_pair += cb << ((j - 1) * 8);
+        ++pcb;
+    }
+    hash = hash ^ xor_pair;
+}
+
 my::string &my::string::operator+(const char *other) {
     size_t j = -1;
     while (other[++j] != '\0') {
