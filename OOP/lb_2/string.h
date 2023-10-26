@@ -22,8 +22,8 @@ class my::string {
     uint32_t hash_code();
     void clear();
     void print_unique_words();
-    size_t find(const char *ch);
-    size_t count(const string &word);
+    size_t count(const char *str);
+    size_t find(const char *str);
     ~string();
 
     static const size_t npos = SIZE_MAX; // special index
@@ -33,10 +33,11 @@ class my::string {
     size_t i_nt = 0; // index of '\0'
     char *data = nullptr;
 
-    static const uint8_t ADD_CHUNK = 12;
+    static const uint8_t ADD_CHUNK = 8;
   
     void xor_helper(uint32_t &hash, int bound, char *&pcb);
     void resize(size_t new_size);
     void resize_to_fit(const char *str);
     void resize_to_fit(size_t char_count);
+    size_t find(size_t start, size_t len, const char *str);
 };

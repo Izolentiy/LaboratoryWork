@@ -2,7 +2,7 @@
 #include <cmath>
 
 my::string::string(const char *str) {
-    size = str_len(str);
+    size = str_size(str);
     i_nt = size - 1;
     data = new char[size];
     for (size_t i = 0; i < size; ++i) {
@@ -52,19 +52,15 @@ void my::string::xor_helper(uint32_t &hash, int bound, char *&pcb) {
 
 void my::string::resize(size_t new_size) {
     char *new_data = new char[new_size];
-    size_t i;
-    for (i = 0; i < new_size - 1; ++i) {
-        if (data[i] == '\0')
-            break;
+    for (size_t i = 0; i <= i_nt; ++i) {
         new_data[i] = data[i];
     }
-    new_data[i_nt = i] = '\0';
     delete[] data;
     data = new_data;
 }
 
 void my::string::resize_to_fit(const char *str) {
-    resize_to_fit(str_len(str));
+    resize_to_fit(str_size(str));
 }
 
 void my::string::resize_to_fit(size_t char_count) {
@@ -123,18 +119,41 @@ my::string &my::string::operator+(const my::string &other) {
     return (*this) + other.as_cstring();
 }
 
+size_t my::string::count(const char *str) {
+    size_t len = str_size(str) - 1;
+    if (len > i_nt)
+        return 0;
+    size_t c = 0; // counter
+    size_t i = find(0, len, str);
+    while (i != npos) {
+        ++c;
+        i = find(i + 1, len, str);
+    }
+    return c;
+}
+
 size_t my::string::find(const char *str) {
-    if (str_len(str) > i_nt)
+    size_t len = str_size(str) - 1;
+    if (len > i_nt)
         return npos;
+    return find(0, len, str);
+}
+
+size_t my::string::find(size_t start, size_t len, const char *str) {
     size_t k = 0; // index for data
     size_t j = 0; // index for str to find
-    for (size_t i = 0; i < i_nt; ++i) {
+
+    // data = "absd0"
+    // str = "sd0"
+    // i_nt = 4; len = 2; 
+    // i : [0, 2]
+
+    for (size_t i = start; i <= i_nt - len; ++i) {
         if (data[i] == str[0]) {
             k = i;
-            while (data[++k] == str[++j]);
-            if (str[j] == '\0') {
+            while (data[++k] == str[++j] && data[k] != '\0');
+            if (str[j] == '\0')
                 return i;
-            }
             j = 0;
         }
     }

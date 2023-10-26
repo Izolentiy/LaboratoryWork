@@ -29,11 +29,17 @@ void linked_map_scenario() {
 
 void string_find_scenario() {
     my::string str = "Hello, my friend! I hope you are happy and healthy";
-    size_t index = str.find("friend");
+
+    const char *to_find = "healthy";
+    const char *to_count = "friend";
+    size_t index = str.find(to_find);
+    size_t count = str.count(to_count);
+
+    std::cout << "count \"" << to_count << "\" : " << count << "\n"; 
     if (index == my::string::npos) {
         std::cout << "substring not found\n";
     } else {
-        std::cout << index;
+        std::cout << "find \"" << to_find << "\" : " << index << "\n";
     }
 }
 

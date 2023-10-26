@@ -12,13 +12,13 @@ bool my::str_cmp(const char *s_1, const char *s_2) {
 /**
  * @return length of c_string including '\0'
  */
-size_t my::str_len(const char *s) {
+size_t my::str_size(const char *s) {
     size_t i = 0;
     while (s[i++] != '\0');
     return i;
 }
 
-size_t my::count(char *s, char c) {
+size_t my::count(const char *s, const char c) {
     size_t r = 0;
     for (size_t i = 0; s[i] != '\0'; ++i) {
         if (s[i] == c)
@@ -48,11 +48,8 @@ size_t my::count_diff(const char *str_1, const char *str_2) {
     return diffs;
 }
 
-/**
- * Удаление символа из строки (нужно подумать над улучшением алгоритма)
- */
 void my::remove_all(char *s, char c) {
-    size_t l = str_len(s);
+    size_t l = str_size(s);
     size_t i = l, j = 0;
     do {
         if (s[i] == c) {
@@ -64,10 +61,6 @@ void my::remove_all(char *s, char c) {
     } while (i-- > 0);
 }
 
-/**
- * Удаляет вхождение второй строки в первую
- */
-void my::remove(char *, char *) {}
 
 bool my::is_digit(char ch) {
     if ('0' <= ch && ch <= '9')
