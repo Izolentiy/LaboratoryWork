@@ -1,7 +1,7 @@
 #pragma once
 
-template <class V>
-my::linked_map<V>::~linked_map() {
+template <class K, class V>
+my::linked_map<K, V>::~linked_map() {
     node *temp = head;
     node *to_delete = temp;
     while (size-- > 0) {
@@ -11,16 +11,16 @@ my::linked_map<V>::~linked_map() {
     }
 }
 
-template <class V>
-V &my::linked_map<V>::get(const my::string &key) {
+template <class K, class V>
+V &my::linked_map<K, V>::get(const K &key) {
     node *to_get = find(key);
     if (to_get == nullptr)
         throw std::logic_error("No element with such key");
     return to_get->get_val();
 }
 
-template <class V>
-void my::linked_map<V>::insert(const my::string &key, const V &obj) {
+template <class K, class V>
+void my::linked_map<K, V>::insert(const K &key, const V &obj) {
     node *to_insert = find(key);
     if (to_insert != nullptr) { // node already exists
         to_insert->get_val() = obj;  // update value
@@ -29,8 +29,8 @@ void my::linked_map<V>::insert(const my::string &key, const V &obj) {
     }
 }
 
-template <class V>
-void my::linked_map<V>::remove(const my::string &key) {
+template <class K, class V>
+void my::linked_map<K, V>::remove(const K &key) {
     node *to_delete = find(key);
     if (to_delete == nullptr) {
         throw std::logic_error("No element with such key");
@@ -43,8 +43,18 @@ void my::linked_map<V>::remove(const my::string &key) {
     }
 }
 
-template <class V>
-typename my::linked_map<V>::node *my::linked_map<V>::find(const my::string &key) {
+template <class K, class V>
+K my::linked_map<K, V>::get_key(size_t index) {
+    return move_to(index)->get_key();
+}
+
+template <class K, class V>
+size_t my::linked_map<K, V>::get_size() const {
+    return size;
+}
+
+template <class K, class V>
+typename my::linked_map<K, V>::node *my::linked_map<K, V>::find(const K &key) {
     if (head != nullptr) {
         node *temp = head;
         do {
@@ -56,8 +66,8 @@ typename my::linked_map<V>::node *my::linked_map<V>::find(const my::string &key)
     return nullptr; // doesn't contain node with given key
 }
 
-template <class V>
-typename my::linked_map<V>::node *my::linked_map<V>::move_to(size_t index) {
+template <class K, class V>
+typename my::linked_map<K, V>::node *my::linked_map<K, V>::move_to(size_t index) {
     check_range(index);
     node *temp;
     if (index > (size / 2)) {
@@ -74,8 +84,8 @@ typename my::linked_map<V>::node *my::linked_map<V>::move_to(size_t index) {
     return temp;
 }
 
-template <class V>
-void my::linked_map<V>::insert(size_t index, const my::string &key, const V &obj) {
+template <class K, class V>
+void my::linked_map<K, V>::insert(size_t index, const K &key, const V &obj) {
     check_range(index);
     if (size == 0) {
         head = new node(key, obj);
@@ -102,23 +112,23 @@ void my::linked_map<V>::insert(size_t index, const my::string &key, const V &obj
     ++size;
 }
 
-template <class V>
-void my::linked_map<V>::check_range(size_t index) {
+template <class K, class V>
+void my::linked_map<K, V>::check_range(size_t index) {
     bool is_correct = (index >= 0) && (index <= size);
     if (!is_correct)
         throw std::out_of_range("Out of range");
 }
 
-template <class V>
-my::linked_map<V>::node::node(my::string key, const V &val, node *next, node *prev)
+template <class K, class V>
+my::linked_map<K, V>::node::node(K key, const V &val, node *next, node *prev)
     : key(key), val(val), next(next), prev(prev) {}
 
-template <class V>
-my::string my::linked_map<V>::node::get_key() const {
+template <class K, class V>
+K my::linked_map<K, V>::node::get_key() const {
     return key;
 }
 
-template <class V>
-V &my::linked_map<V>::node::get_val() {
+template <class K, class V>
+V &my::linked_map<K, V>::node::get_val() {
     return val;
 }

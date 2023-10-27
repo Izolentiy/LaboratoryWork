@@ -1,5 +1,4 @@
 #pragma once
-#include "string.h"
 #include <stdexcept>
 #include <stdint.h>
 
@@ -11,23 +10,23 @@
  **/
 
 namespace my {
-    template <class V>
+    template <class K, class V>
     class linked_map;
 }
 
-template <class V>
+template <class K, class V>
 class my::linked_map {
     class node {
       public:
-        node(my::string key, const V &data, node *next = nullptr, node *prev = nullptr);
-        my::string get_key() const;
-        V &get_val();
-
         node *next;
         node *prev;
 
+        node(K key, const V &data, node *next = nullptr, node *prev = nullptr);
+        K get_key() const;
+        V &get_val();
+
       private:
-        my::string key;
+        K key;
         V val;
     };
 
@@ -35,17 +34,20 @@ class my::linked_map {
     linked_map() = default;
     ~linked_map();
 
-    V &get(const my::string &key);
-    void insert(const my::string &key, const V &obj);
-    void remove(const my::string &key);
+    V &get(const K &key);
+    void insert(const K &key, const V &obj);
+    void remove(const K &key);
+
+    K get_key(size_t index);
+    size_t get_size() const;
 
   private:
     node *head = nullptr;
     node *tail = nullptr;
     size_t size = 0;
-    node *find(const my::string &key);
+    node *find(const K &key);
     node *move_to(size_t index);
-    void insert(size_t index, const my::string &key, const V &obj);
+    void insert(size_t index, const K &key, const V &obj);
     void check_range(size_t index);
 };
 

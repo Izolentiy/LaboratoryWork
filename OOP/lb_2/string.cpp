@@ -174,16 +174,19 @@ size_t my::string::find(size_t start, size_t len, const char *str) {
         }
     }
     return npos;
+    // Hello, everybody, my name is Maximillian and would like to say my name again.
+
 }
 
 // "asdf0"
 // start = 0; end = i_nt = 4
-// len = 4
+// len = 4; size = 5
 char *my::string::substring(size_t start, size_t end) const {
     size_t len = end - start;
-    char *str = new char[len];
+    char *str = new char[len+1];
     for (size_t i = 0; i < len; ++i, ++start)
         str[i] = data[start];
+    str[len] = '\0';
     return str;
 }
 
@@ -191,9 +194,9 @@ void my::string::clear() {
     data[i_nt = 0] = '\0';
 }
 
-my::linked_map<int> my::string::unique_words() {
-    my::linked_map<int> result;
-    std::vector<bool> range(i_nt); // to define ignore indexes
+my::linked_map<my::string, int> my::string::unique_words() {
+    my::linked_map<my::string, int> result;
+    std::vector<bool> range(i_nt + 1); // to define ignore indexes
 
     // 1. select a word
     // 2. call find(word)
@@ -201,33 +204,36 @@ my::linked_map<int> my::string::unique_words() {
     // 4. add word to the map
     // 5. repeat until end
 
+    bool processing = false;
     size_t ws = 0; // word start
     size_t we = 0; // word end
     size_t wc = 0; // word count
     size_t wl = 0; // word length
     char *word = nullptr;
-    for (size_t i = 0; i < i_nt; ++i) {
+    for (size_t i = 0; i <= i_nt; ++i) {
         if (range[i])
             continue;
-        if (!is_letter(data[i]) || data[i] != '-') {
+        if (!is_letter(data[i]) && data[i] != '-' && processing) {
+            processing = false;
             we = i;
             wl = we - ws;
             word = substring(ws, we);
-            size_t ni = find(word); // next index
+            size_t ni = find(we, wl, word); // next index
             wc = 1;
             if (ni != npos) {
                 do {
                     ++wc;
                     // update ignore range
                     for (size_t j = 0; j < wl; ++j) {
-                        range[j + ni] = 0;
+                        range[j + ni] = 1;
                     }
                     ni = find(ni + wl, wl, word);
                 } while (ni != npos);
             }
             result.insert(word, wc);
             delete[] word;
-        } else {
+        } else if ((is_letter(data[i]) || data[i] == '-') && !processing) {
+            processing = true;
             ws = i;
         }
     }

@@ -25,7 +25,7 @@ class my::string {
     string &operator+(int num);
     uint32_t hash_code();
     void clear();
-    linked_map<int> unique_words();
+    linked_map<string, int> unique_words();
     size_t count(const char *str);
     size_t find(const char *str);
     size_t get_size() const;
