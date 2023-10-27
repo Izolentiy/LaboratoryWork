@@ -1,6 +1,12 @@
 #include "string.h"
 #include <cmath>
 
+my::string::string() {
+    size = 1;
+    data = new char[size];
+    data[i_nt] = '\0';
+}
+
 my::string::string(const char *str) {
     size = str_size(str);
     i_nt = size - 1;
@@ -21,10 +27,11 @@ char *my::string::as_cstring() const{
 }
 
 char *my::string::as_new_cstring() const {
-    char *copy = new char[i_nt + 1];
-    for (size_t i = 0; i < i_nt + 1; ++i)
-        copy[i] = data[i];
-    return copy;
+    // char *copy = new char[i_nt + 1];
+    // for (size_t i = 0; i < i_nt + 1; ++i)
+    //     copy[i] = data[i];
+    // return copy;
+    return substring(0, i_nt);
 }
 
 uint32_t my::string::hash_code() {
@@ -57,14 +64,15 @@ void my::string::resize(size_t new_size) {
     }
     delete[] data;
     data = new_data;
+    size = new_size;
 }
 
 void my::string::resize_to_fit(const char *str) {
-    resize_to_fit(str_size(str));
+    resize_to_fit(str_size(str) - 1);
 }
 
 void my::string::resize_to_fit(size_t char_count) {
-    size_t free = size - i_nt; // free space
+    size_t free = (size - 1) - i_nt; // free space
 
     // check if there is enough space
     if (free < char_count) {
@@ -139,6 +147,14 @@ size_t my::string::find(const char *str) {
     return find(0, len, str);
 }
 
+size_t my::string::get_size() const {
+    return size;
+}
+
+size_t my::string::get_length() const {
+    return i_nt;
+}
+
 size_t my::string::find(size_t start, size_t len, const char *str) {
     size_t k = 0; // index for data
     size_t j = 0; // index for str to find
@@ -160,8 +176,62 @@ size_t my::string::find(size_t start, size_t len, const char *str) {
     return npos;
 }
 
+// "asdf0"
+// start = 0; end = i_nt = 4
+// len = 4
+char *my::string::substring(size_t start, size_t end) const {
+    size_t len = end - start;
+    char *str = new char[len];
+    for (size_t i = 0; i < len; ++i, ++start)
+        str[i] = data[start];
+    return str;
+}
+
 void my::string::clear() {
     data[i_nt = 0] = '\0';
+}
+
+my::linked_map<int> my::string::unique_words() {
+    my::linked_map<int> result;
+    std::vector<bool> range(i_nt); // to define ignore indexes
+
+    // 1. select a word
+    // 2. call find(word)
+    // 3. update ignore range
+    // 4. add word to the map
+    // 5. repeat until end
+
+    size_t ws = 0; // word start
+    size_t we = 0; // word end
+    size_t wc = 0; // word count
+    size_t wl = 0; // word length
+    char *word = nullptr;
+    for (size_t i = 0; i < i_nt; ++i) {
+        if (range[i])
+            continue;
+        if (!is_letter(data[i]) || data[i] != '-') {
+            we = i;
+            wl = we - ws;
+            word = substring(ws, we);
+            size_t ni = find(word); // next index
+            wc = 1;
+            if (ni != npos) {
+                do {
+                    ++wc;
+                    // update ignore range
+                    for (size_t j = 0; j < wl; ++j) {
+                        range[j + ni] = 0;
+                    }
+                    ni = find(ni + wl, wl, word);
+                } while (ni != npos);
+            }
+            result.insert(word, wc);
+            delete[] word;
+        } else {
+            ws = i;
+        }
+    }
+    return result;
 }
 
 my::string::~string() {
