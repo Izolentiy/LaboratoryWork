@@ -49,7 +49,7 @@ K my::linked_map<K, V>::get_key(size_t index) {
 }
 
 template <class K, class V>
-size_t my::linked_map<K, V>::get_size() const {
+size_t my::linked_map<K, V>::get_size() {
     return size;
 }
 
@@ -120,7 +120,7 @@ void my::linked_map<K, V>::check_range(size_t index) {
 }
 
 template <class K, class V>
-my::linked_map<K, V>::node::node(K key, const V &val, node *next, node *prev)
+my::linked_map<K, V>::node::node(const K &key, const V &val, node *next, node *prev)
     : key(key), val(val), next(next), prev(prev) {}
 
 template <class K, class V>

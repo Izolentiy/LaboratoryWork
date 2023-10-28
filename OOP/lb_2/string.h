@@ -25,9 +25,11 @@ class my::string {
     string &operator+(int num);
     uint32_t hash_code();
     void clear();
-    linked_map<string, int> unique_words();
+    string to_lower_case();
+    linked_map<string, size_t> unique_words();
     size_t count(const char *str);
-    size_t find(const char *str);
+    size_t find_any(const char *str);
+    size_t find_isolated(const char *str);
     size_t get_size() const;
     size_t get_length() const;
     ~string();
@@ -46,5 +48,6 @@ class my::string {
     void resize_to_fit(const char *str);
     void resize_to_fit(size_t char_count);
     char* substring(size_t start, size_t end) const;
-    size_t find(size_t start, size_t len, const char *str);
+    size_t find_any(size_t start, size_t len, const char *str);
+    size_t find_isolated(size_t start, size_t len, const char *str);
 };

@@ -34,10 +34,10 @@ void string_find_scenario() {
 
     const char *to_find = "healthy";
     const char *to_count = "friend";
-    size_t index = str.find(to_find);
+    size_t index = str.find_any(to_find);
     size_t count = str.count(to_count);
 
-    std::cout << "count \"" << to_count << "\" : " << count << "\n"; 
+    std::cout << "count \"" << to_count << "\" : " << count << "\n";
     if (index == my::string::npos) {
         std::cout << "substring not found\n";
     } else {
@@ -47,32 +47,39 @@ void string_find_scenario() {
 
 void string_resize_scenario() {
     my::string str;
-    
+
     std::cout << str << "\n";
     str + "biba" + " and " + "bob";
-    std::cout << "\""<< str << "\" size : " << str.get_size() << "\n";
-    std::cout << "\""<< str << "\" length : " << str.get_length() << "\n";
+    std::cout << "\"" << str << "\" size : " << str.get_size() << "\n";
+    std::cout << "\"" << str << "\" length : " << str.get_length() << "\n";
 
     str + 'a';
-    std::cout << "\""<< str << "\" size : " << str.get_size() << "\n";
-    std::cout << "\""<< str << "\" length : " << str.get_length() << "\n";
+    std::cout << "\"" << str << "\" size : " << str.get_size() << "\n";
+    std::cout << "\"" << str << "\" length : " << str.get_length() << "\n";
 
     str + 2;
-    std::cout << "\""<< str << "\" size : " << str.get_size() << "\n";
-    std::cout << "\""<< str << "\" length : " << str.get_length() << "\n";
+    std::cout << "\"" << str << "\" size : " << str.get_size() << "\n";
+    std::cout << "\"" << str << "\" length : " << str.get_length() << "\n";
 }
 
 void word_count_scenario() {
-    my::string text = "Hello, everybody, my name is Maximillian and would like to say my name again.";
-    std::cout << text << "\n\n";
-    my::linked_map<my::string, int> result = text.unique_words();
-    
-    size_t size = result.get_size();
-    std::cout << "Unique words : " << size << "\n";
-    for (size_t i = 0; i < result.get_size(); ++i) {
-        my::string key = result.get_key(i);
-        int val = result.get(key);
-        std::cout << key << " - " << val << "\n";
+    std::vector<my::string> texts = {
+        "BiBA bOba Biba Boba",
+        "H He Hel Hell Hello",
+        "Hello-world hello - world",
+        "Hello, everybody, my name is Maximillian and I would like to say my name again."
+    };
+    for (my::string &text : texts) {
+        std::cout << "\n\n" << text << "\n";
+        my::linked_map<my::string, size_t> result = text.to_lower_case().unique_words();
+
+        size_t size = result.get_size();
+        std::cout << "    Unique words : " << size << "\n";
+        for (size_t i = 0; i < result.get_size(); ++i) {
+            my::string key = result.get_key(i);
+            int val = result.get(key);
+            std::cout << key << " - " << val << "\n";
+        }
     }
 }
 

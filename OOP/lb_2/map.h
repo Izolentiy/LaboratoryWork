@@ -2,13 +2,6 @@
 #include <stdexcept>
 #include <stdint.h>
 
-/**
- * Что должен уметь словарь:
- * - получение элемента по ключу
- * - добавление элемента с заданным ключом
- * - удаление элемента по ключу
- **/
-
 namespace my {
     template <class K, class V>
     class linked_map;
@@ -21,7 +14,7 @@ class my::linked_map {
         node *next;
         node *prev;
 
-        node(K key, const V &data, node *next = nullptr, node *prev = nullptr);
+        node(const K &key, const V &data, node *next = nullptr, node *prev = nullptr);
         K get_key() const;
         V &get_val();
 
@@ -39,7 +32,7 @@ class my::linked_map {
     void remove(const K &key);
 
     K get_key(size_t index);
-    size_t get_size() const;
+    size_t get_size();
 
   private:
     node *head = nullptr;

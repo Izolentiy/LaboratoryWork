@@ -11,5 +11,6 @@ namespace my {
     bool is_digit(char ch);
     bool is_letter(char ch);
     bool is_vowel(char ch); // гласная
+    bool is_letter_or_dash(char ch);
     int32_t parse_from_str(char *, bool, uint8_t);
 }

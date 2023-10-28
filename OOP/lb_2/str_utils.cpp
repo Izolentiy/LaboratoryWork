@@ -85,6 +85,10 @@ bool my::is_vowel(char ch) {
     return false;
 }
 
+bool my::is_letter_or_dash(char ch) {
+    return is_letter(ch) || ch == '-';
+}
+
 /**
  * 12345 =
  * 10000 +
