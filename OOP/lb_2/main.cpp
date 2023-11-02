@@ -3,12 +3,14 @@
 #include "string.h"
 #include <iostream>
 #include <vector>
+#include <string>
 
 void hash_code_scenario();
 void linked_map_scenario();
 void string_find_scenario();
 void string_resize_scenario();
 void word_count_scenario();
+void file_in_out_scenario();
 
 void hash_code_scenario() {
     std::vector<my::string> strs = {
@@ -35,7 +37,7 @@ void string_find_scenario() {
     const char *to_find = "healthy";
     const char *to_count = "friend";
     size_t index = str.find_any(to_find);
-    size_t count = str.count(to_count);
+    size_t count = str.count_any(to_count);
 
     std::cout << "count \"" << to_count << "\" : " << count << "\n";
     if (index == my::string::npos) {
@@ -49,15 +51,15 @@ void string_resize_scenario() {
     my::string str;
 
     std::cout << str << "\n";
-    str + "biba" + " and " + "bob";
+    str << "biba" << " and " << "bob";
     std::cout << "\"" << str << "\" size : " << str.get_size() << "\n";
     std::cout << "\"" << str << "\" length : " << str.get_length() << "\n";
 
-    str + 'a';
+    str << 'a';
     std::cout << "\"" << str << "\" size : " << str.get_size() << "\n";
     std::cout << "\"" << str << "\" length : " << str.get_length() << "\n";
 
-    str + 2;
+    str << 2;
     std::cout << "\"" << str << "\" size : " << str.get_size() << "\n";
     std::cout << "\"" << str << "\" length : " << str.get_length() << "\n";
 }
@@ -75,17 +77,30 @@ void word_count_scenario() {
 
         size_t size = result.get_size();
         std::cout << "    Unique words : " << size << "\n";
-        for (size_t i = 0; i < result.get_size(); ++i) {
-            my::string key = result.get_key(i);
-            int val = result.get(key);
+    
+        size_t val;
+        my::string key;
+        for (size_t i = 0; i < size; ++i) {
+            key = result.get_key(i);
+            val = result.get(key);
             std::cout << key << " - " << val << "\n";
         }
     }
+}
+
+void file_in_out_scenario() {
+    const char *input_file = "input.txt";
+    const char *output_file = "output.txt";
+    my::string str;
+    input_file >> str;
+    std::cout << str;
+    output_file << str;
 }
 
 int main() {
     // hash_code_scenario();
     // string_find_scenario();
     // string_resize_scenario();
-    word_count_scenario();
+    // word_count_scenario();
+    file_in_out_scenario();
 }

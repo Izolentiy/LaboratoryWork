@@ -10,6 +10,7 @@ my::string::string() {
 my::string::string(const char *str) {
     size = str_size(str);
     i_nt = size - 1;
+    delete[] data;
     data = new char[size];
     for (size_t i = 0; i < size; ++i) {
         data[i] = str[i];
@@ -81,17 +82,18 @@ bool my::string::operator==(const my::string &other) {
     return str_cmp(data, other.data);
 }
 
-my::string &my::string::operator+(const char *other) {
+my::string &my::string::operator<<(const char *other) {
     resize_to_fit(other);
     size_t j = -1;
     while (other[++j] != '\0') {
         data[i_nt + j] = other[j];
     }
     data[i_nt += j] = '\0';
+    std::cout << i_nt << "\n";
     return *this;
 }
 
-my::string &my::string::operator+(int num) {
+my::string &my::string::operator<<(int num) {
     // INT_MIN (4 byte) consist of 11 chars
     resize_to_fit(11);
     
@@ -112,26 +114,34 @@ my::string &my::string::operator+(int num) {
     return *this;
 }
 
-my::string &my::string::operator+(char ch) {
+my::string &my::string::operator<<(char ch) {
     resize_to_fit(1);
     data[i_nt] = ch;
     data[++i_nt] = '\0';
     return *this;
 }
 
-my::string &my::string::operator+(const my::string &other) {
-    return (*this) + other.as_cstring();
+my::string &my::string::operator<<(const my::string &other) {
+    return (*this) << other.as_cstring();
 }
 
-size_t my::string::count(const char *str) {
+size_t my::string::count_any(const char *str) {
+    return count_helper(str, find_any);
+}
+
+size_t my::string::count_isolated(const char *str) {
+    return count_helper(str, find_isolated);
+}
+
+size_t my::string::count_helper(const char *str, find_func find) {
     size_t len = str_size(str) - 1;
     if (len > i_nt)
         return 0;
     size_t c = 0; // counter
-    size_t i = find_any(0, len, str);
+    size_t i = (this->*find)(0, len, str);
     while (i != npos) {
         ++c;
-        i = find_any(i + 1, len, str);
+        i = (this->*find)(i + 1, len, str);
     }
     return c;
 }
@@ -161,11 +171,6 @@ size_t my::string::get_length() const {
 size_t my::string::find_any(size_t start, size_t len, const char *str) {
     size_t k = 0; // index for data
     size_t j = 0; // index for str to find
-
-    // data = "absd0"
-    // str = "sd0"
-    // i_nt = 4; len = 2; 
-    // i : [0, 2]
 
     for (size_t i = start; i <= i_nt - len; ++i) {
         if (data[i] == str[0]) {
@@ -220,14 +225,11 @@ void my::string::clear() {
     data[i_nt = 0] = '\0';
 }
 
-/**
- * For ASCII only
- */
 my::string my::string::to_lower_case() {
     my::string res = *this;
     for (size_t i = 0; i < i_nt; ++i) {
         if (res.data[i] >= 'A' && res.data[i] <= 'Z')
-            res.data[i] = res.data[i] + 32;
+            res.data[i] += 32; // ASCII shift between up and low case letters
     }
     return res;
 }
@@ -279,4 +281,29 @@ my::string::~string() {
 
 std::ostream &my::operator<<(std::ostream &out, const my::string &str) {
     return out << str.as_cstring();
+}
+
+void my::operator<<(const char *out, const my::string &str) {
+    std::ofstream fout(out, std::ios::binary);
+    if (fout.is_open()) {
+        fout << str;
+    }
+    fout.close();
+}
+
+void my::operator>>(const char *in, my::string &str) {
+    std::ifstream fin(in, std::ios::binary);
+    if (fin.is_open()) {
+        fin.seekg(0, std::ios::end);
+        size_t len = fin.tellg();
+        fin.seekg(0, std::ios::beg);
+
+        char *buffer = new char[len + 1];
+        fin.read(buffer, len);
+        buffer[len] = 0;
+
+        str << buffer; // append to str
+        delete[] buffer;
+    }
+    fin.close();
 }

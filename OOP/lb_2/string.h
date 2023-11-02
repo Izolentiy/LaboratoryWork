@@ -4,37 +4,41 @@
 #include <vector>
 #include <bitset>
 #include <ostream>
+#include <fstream>
 #include <iostream>
 
 namespace my {
     class string;
     std::ostream &operator<<(std::ostream &out, const my::string &str);
+    void operator<<(const char *out, const my::string &str);
+    void operator>>(const char *in, my::string &str);
 }
 
 class my::string {
   public:
+    static const size_t npos = SIZE_MAX; // not found index
+
     string();
     string(const char *str);
     string(const my::string &other);
     char *as_cstring() const;
     char *as_new_cstring() const;
     bool operator==(const my::string &other);
-    string &operator+(const my::string &other);
-    string &operator+(const char *str);
-    string &operator+(char ch);
-    string &operator+(int num);
+    string &operator<<(const my::string &other);
+    string &operator<<(const char *str);
+    string &operator<<(char ch);
+    string &operator<<(int num);
+    string to_lower_case();
     uint32_t hash_code();
     void clear();
-    string to_lower_case();
     linked_map<string, size_t> unique_words();
-    size_t count(const char *str);
+    size_t count_any(const char *str);
+    size_t count_isolated(const char *str);
     size_t find_any(const char *str);
     size_t find_isolated(const char *str);
     size_t get_size() const;
     size_t get_length() const;
     ~string();
-
-    static const size_t npos = SIZE_MAX; // special index
 
   private:
     size_t size;     // array length
@@ -42,6 +46,8 @@ class my::string {
     char *data = nullptr;
 
     static const uint8_t ADD_CHUNK = 8;
+
+    typedef size_t (my::string::*find_func)(size_t start, size_t len, const char *str);
   
     void xor_helper(uint32_t &hash, int bound, char *&pcb);
     void resize(size_t new_size);
@@ -50,4 +56,5 @@ class my::string {
     char* substring(size_t start, size_t end) const;
     size_t find_any(size_t start, size_t len, const char *str);
     size_t find_isolated(size_t start, size_t len, const char *str);
+    size_t count_helper(const char *str, find_func find);
 };
