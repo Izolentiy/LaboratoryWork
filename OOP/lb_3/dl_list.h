@@ -25,15 +25,16 @@ class my::dl_list : public my::container<T> {
     void push_back(const T &obj);
     void remove(size_t index);
     T &operator[](size_t index);
+    T operator[](size_t index) const;
     ~dl_list();
 
   private:
     node *head = nullptr;
     node *tail = nullptr;
 
-    node *move_to(size_t index);
-    void check_put_range(size_t index);
-    void check_get_range(size_t index);
+    node *move_to(size_t index) const;
+    void check_put_range(size_t index) const;
+    void check_get_range(size_t index) const;
 };
 
 #include "dl_list.hpp"

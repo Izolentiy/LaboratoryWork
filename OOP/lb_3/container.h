@@ -15,6 +15,7 @@ class my::container {
     virtual void push_back(const T &obj) = 0;
     virtual void remove(size_t index) = 0;
     virtual T &operator[](size_t index) = 0;
+    virtual T operator[](size_t index) const = 0;
 
   protected:
     size_t size = 0;

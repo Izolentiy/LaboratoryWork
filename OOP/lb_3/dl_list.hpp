@@ -12,7 +12,6 @@ void my::dl_list<T>::push_back(const T &obj) {
 
 template <class T>
 void my::dl_list<T>::insert(const T &obj, size_t index) {
-    check_put_range(index);
     if (this->size == 0 && index == 0) {
         head = new node(obj);
         tail = head;
@@ -20,6 +19,7 @@ void my::dl_list<T>::insert(const T &obj, size_t index) {
         return;
     }
 
+    check_put_range(index);
     if (index == 0) {
         node *to_insert = new node(obj, head, nullptr);
         head->prev = to_insert;
@@ -40,7 +40,6 @@ void my::dl_list<T>::insert(const T &obj, size_t index) {
 
 template <class T>
 void my::dl_list<T>::remove(size_t index) {
-    check_get_range(index);
     if (this->size == 1 && index == 0) {
         node *to_delete = head;
         head = nullptr;
@@ -50,6 +49,7 @@ void my::dl_list<T>::remove(size_t index) {
         return;
     }
     
+    check_get_range(index);
     if (index == 0) {
         node *to_delete = head;
         head = head->next;
@@ -64,8 +64,8 @@ void my::dl_list<T>::remove(size_t index) {
         node *to_delete = move_to(index);
         node *prev = to_delete->prev;
         node *next = to_delete->next;
-        next->prev = to_delete->prev;
-        prev->next = to_delete->next;
+        next->prev = prev;
+        prev->next = next;
         delete to_delete;
     }
     --(this->size);
@@ -73,6 +73,13 @@ void my::dl_list<T>::remove(size_t index) {
 
 template <class T>
 T &my::dl_list<T>::operator[](size_t index) {
+    check_get_range(index);
+    node *target = move_to(index);
+    return target->val;
+}
+
+template <class T>
+T my::dl_list<T>::operator[](size_t index) const {
     check_get_range(index);
     node *target = move_to(index);
     return target->val;
@@ -90,7 +97,7 @@ my::dl_list<T>::~dl_list() {
 }
 
 template <class T>
-typename my::dl_list<T>::node *my::dl_list<T>::move_to(size_t index) {
+typename my::dl_list<T>::node *my::dl_list<T>::move_to(size_t index) const {
     node *temp;
     if (index > (this->size / 2)) {
         temp = tail;
@@ -107,13 +114,13 @@ typename my::dl_list<T>::node *my::dl_list<T>::move_to(size_t index) {
 }
 
 template <class T>
-void my::dl_list<T>::check_put_range(size_t index) {
+void my::dl_list<T>::check_put_range(size_t index) const {
     if (!(index >= 0 && index <= this->size))
         throw std::out_of_range("Out of range");
 }
 
 template <class T>
-void my::dl_list<T>::check_get_range(size_t index) {
+void my::dl_list<T>::check_get_range(size_t index) const {
     if (!(index >= 0 && index < this->size))
         throw std::out_of_range("Out of range");
 }

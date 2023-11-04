@@ -1,22 +1,37 @@
+#include "container.h"
 #include "dl_list.h"
 #include <iostream>
 
-void populate(my::dl_list<int> &list, int elem_count);
-void print(my::dl_list<int> &list);
-void removal_scenario();
-void insertion_scenario();
-void extraction_scenario();
+void populate(my::container<int> &list, int elem_count);
+void clear(my::container<int> &list);
+void print(my::container<int> &list);
+
+void removal_scenario(my::container<int> &list);
+void insertion_scenario(my::container<int> &list);
+void extraction_scenario(my::container<int> &list);
+
+void doubly_linked_list_tests();
+void singly_linked_list_tests();
 
 int main() {
-    extraction_scenario();
-    removal_scenario();
-    insertion_scenario();
+    doubly_linked_list_tests();
 }
 
-void removal_scenario() {
+void doubly_linked_list_tests() {
+    my::dl_list<int> list;
+    extraction_scenario(list);
+    removal_scenario(list);
+    insertion_scenario(list);
+}
+
+void singly_linked_list_tests() {
+    
+}
+
+void removal_scenario(my::container<int> &list) {
     std::cout << "\n\nRemove scenario\n\n";
 
-    my::dl_list<int> list;
+    clear(list);
     int size = 8;
     populate(list, size);
     print(list);
@@ -47,10 +62,10 @@ void removal_scenario() {
     }
 }
 
-void extraction_scenario() {
+void extraction_scenario(my::container<int> &list) {
     std::cout << "\n\nExtract scenario\n\n";
 
-    my::dl_list<int> list;
+    clear(list);
     // wrong indeces
     try {
         std::cout << "Try to access element out of range : ";
@@ -77,10 +92,10 @@ void extraction_scenario() {
     std::cout << "last element : " << last << "\n";
 }
 
-void insertion_scenario() {
+void insertion_scenario(my::container<int> &list) {
     std::cout << "\n\nInsert scenario\n\n";
 
-    my::dl_list<int> list;
+    clear(list);
     int size = 8;
     populate(list, size);
     print(list);
@@ -111,13 +126,20 @@ void insertion_scenario() {
     }
 }
 
-void populate(my::dl_list<int> &list, int elem_count) {
+void populate(my::container<int> &list, int elem_count) {
     for (int i = 0; i < elem_count; ++i) {
         list.push_back(i + 1);
     }
 }
 
-void print(my::dl_list<int> &list) {
+void clear(my::container<int> &list) {
+    size_t init_size = list.get_size();
+    for (size_t i = 0; i < init_size; ++i) {
+        list.remove(0);
+    }
+}
+
+void print(my::container<int> &list) {
     for (int i = 0; i < list.get_size(); ++i) {
         std::cout << list[i];
         if (i != list.get_size() - 1)
