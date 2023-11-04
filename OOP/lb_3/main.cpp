@@ -1,5 +1,6 @@
 #include "container.h"
 #include "dl_list.h"
+#include "sl_list.h"
 #include <iostream>
 
 void populate(my::container<int> &list, int elem_count);
@@ -15,21 +16,27 @@ void singly_linked_list_tests();
 
 int main() {
     doubly_linked_list_tests();
+    singly_linked_list_tests();
 }
 
 void doubly_linked_list_tests() {
     my::dl_list<int> list;
+    std::cout << "\n\n\n ~~~ DOUBLY-LINKED LIST TESTS:\n";
     extraction_scenario(list);
     removal_scenario(list);
     insertion_scenario(list);
 }
 
 void singly_linked_list_tests() {
-    
+    my::sl_list<int> list;
+    std::cout << "\n\n\n ~~~ SINGLY-LINKED LIST TESTS:\n";
+    extraction_scenario(list);
+    removal_scenario(list);
+    insertion_scenario(list);
 }
 
 void removal_scenario(my::container<int> &list) {
-    std::cout << "\n\nRemove scenario\n\n";
+    std::cout << "\n\n ~ Remove scenario\n\n";
 
     clear(list);
     int size = 8;
@@ -37,25 +44,25 @@ void removal_scenario(my::container<int> &list) {
     print(list);
 
     // remove last
-    std::cout << "Remove last\n";
+    std::cout << "Remove last [" << size - 1 << "]\n";
     list.remove(size - 1);
     print(list);
 
     // remove first
-    std::cout << "Remove first\n";
+    std::cout << "Remove first [0]\n";
     list.remove(0);
     print(list);
 
     // remove correct index
     int correct = 3;
-    std::cout << "Remove " << correct << "\n";
+    std::cout << "Remove [" << correct << "]\n";
     list.remove(correct);
     print(list);
 
     // remove wrong index
     try {
         int wrong = 12;
-        std::cout << "Remove " << wrong << "\n";
+        std::cout << "Remove [" << wrong << "]\n";
         list.remove(wrong);
     } catch (const std::out_of_range &e) {
         std::cerr << e.what() << '\n';
@@ -63,7 +70,7 @@ void removal_scenario(my::container<int> &list) {
 }
 
 void extraction_scenario(my::container<int> &list) {
-    std::cout << "\n\nExtract scenario\n\n";
+    std::cout << "\n\n ~ Extract scenario\n\n";
 
     clear(list);
     // wrong indeces
@@ -93,7 +100,7 @@ void extraction_scenario(my::container<int> &list) {
 }
 
 void insertion_scenario(my::container<int> &list) {
-    std::cout << "\n\nInsert scenario\n\n";
+    std::cout << "\n\n ~ Insert scenario\n\n";
 
     clear(list);
     int size = 8;
@@ -101,25 +108,25 @@ void insertion_scenario(my::container<int> &list) {
     print(list);
 
     // insert on last
-    std::cout << "Insert on last\n";
+    std::cout << "Insert on last [" << size << "]\n";
     list.insert(10, size);
     print(list);
 
     // insert on first
-    std::cout << "Insert on first\n";
+    std::cout << "Insert on first [0]\n";
     list.insert(11, 0);
     print(list);
 
     // insert correct index
     int correct = 3;
-    std::cout << "Insert on " << correct << "\n";
+    std::cout << "Insert on [" << correct << "]\n";
     list.insert(12, correct);
     print(list);
 
     // insert wrong index
     try {
         int wrong = 20;
-        std::cout << "Insert on " << wrong << "\n";
+        std::cout << "Insert on [" << wrong << "]\n";
         list.insert(13, wrong);
     } catch (const std::out_of_range &e) {
         std::cerr << e.what() << '\n';
