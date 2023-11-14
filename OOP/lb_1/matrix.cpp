@@ -16,25 +16,37 @@ matrix::matrix(std::vector<double> elems, int rows, int cols)
 
 matrix::matrix(const std::string &input_filename)
 {
-    // std::cout << "Matrix " << this << " ctor called" << std::endl;
     int cols = 0, rows = 0;
-    std::string str;         // string
     std::vector<double> vec; // elements
     std::ifstream fin(input_filename);
 
     if (fin.is_open())
-    while (std::getline(fin, str))
     {
-        size_t sb = vec.size();             // size before manipulation
-        str_helper::add_elements(vec, str); // add new row to matrix
-        int cur_cols = vec.size() - sb;     // column count in row
+        bool is_delim_or_digit;   // is digit / delimeter
+        bool num_started = false; // number started
+        do {
+            char ch = fin.peek();
+            is_delim_or_digit = ch == '.' || ('0' <= ch  && ch <= '9');
+            if (!num_started && is_delim_or_digit) {
+                num_started = true;
+            }
+            if (num_started && !is_delim_or_digit) {
+                num_started = false;
+                ++cols;
+            }
+        } while (fin.get() != '\n' && !fin.eof());
+        
+        double x;
+        fin.clear();              // clear flags
+        fin.seekg(std::ios::beg); // set read position to start
+        while (fin >> x)
+            vec.push_back(x);
 
-        if (rows == 0)
-            cols = cur_cols;
-        else if (cols != cur_cols)
+        if (!fin.eof() && fin.fail() || cols == 0)
             throw std::runtime_error(INVALID_INPUT);
-
-        ++rows;
+        rows = vec.size() / cols;
+        if (rows * cols != vec.size())
+            throw std::runtime_error(INVALID_INPUT);
     }
     else throw std::runtime_error(UNABLE_TO_OPEN_FILE);
     fin.close();
