@@ -42,7 +42,6 @@ public:
     matrix operator*(matrix *other);
     matrix operator*(const matrix &other);
     matrix operator*(double num);
-    void operator*=(matrix *other);
     void operator*=(const matrix &other);
     void operator*=(double num);
     matrix &operator=(const matrix &other);

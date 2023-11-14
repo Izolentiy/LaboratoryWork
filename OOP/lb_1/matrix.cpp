@@ -224,7 +224,7 @@ matrix matrix::operator^(int pow)
     else
         while (pow-- > 1)
         {
-            res *= this;
+            res *= (*this);
         }
     
     return res;
@@ -242,11 +242,6 @@ void matrix::operator*=(const matrix &other)
 {
     matrix temp(*this);
     *this = temp * this;
-}
-
-void matrix::operator*=(matrix *other)
-{
-    (*this) *= (*other);
 }
 
 matrix &matrix::operator=(const matrix &other)

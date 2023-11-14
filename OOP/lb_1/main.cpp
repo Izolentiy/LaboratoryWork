@@ -8,6 +8,7 @@ void scenario_3();
 void scenario_4();
 void double_converter_test();
 void interpreter_test();
+void determinant_test();
 void task();
 
 int main()
@@ -85,6 +86,8 @@ void interpreter_test()
         {"just_minus_among_nums.txt", 0, 0, true},
         {"missing_num_in_row.txt", 0, 0, true},
         {"extra_num_in_row.txt", 0, 0, true},
+        {"extra_spaces.txt", 4, 5, true},
+        {"empty_file.txt", 0, 0, true},
         {"matrix_1x1.txt", 1, 1, false},
         {"matrix_1x3.txt", 1, 3, false},
         {"matrix_2x2.txt", 2, 2, false},
@@ -120,7 +123,6 @@ void interpreter_test()
         if (valid_match && cols_match && rows_match)
             status = PASS;
         std::cout << t.filename << "   " << status << '\n';
-        // std::cout << m << "\n\n";
 
         if (!cols_match)
             print_diff("COLS", t.expected_cols, m.get_cols());
@@ -128,6 +130,25 @@ void interpreter_test()
             print_diff("ROWS", t.expected_rows, m.get_rows());
         if (!valid_match)
             print_diff("INVALID", t.expected_invalid, !t.expected_invalid);
+    }
+}
+
+void determinant_test() {
+    struct det_test_case
+    {
+        std::string filename;
+        double expected;
+    };
+    std::vector<det_test_case> test_cases = {
+        {"matrix_1x1.txt", 2},
+        {"matrix_2x2.txt", -62},
+        {"matrix_7x7.txt", 2},
+        {"matrix_1x3.txt", nan("")},
+        {"zero_det.txt", 0},
+    };
+    for (det_test_case &t : test_cases)
+    {
+
     }
 }
 
