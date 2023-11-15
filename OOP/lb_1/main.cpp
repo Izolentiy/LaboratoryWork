@@ -17,13 +17,14 @@ int main()
     // scenario_2();
     // scenario_3();
     // scenario_4();
-    // task();
-    double_converter_test();
+    task();
+    // double_converter_test();
     interpreter_test();
 }
 
 void double_converter_test()
 {
+    std::cout << "\n\nDOUBLE CONVERTER TESTS\n\n";
     struct text_test_case
     {
         std::string name;
@@ -72,7 +73,8 @@ void double_converter_test()
 }
 
 void interpreter_test()
-{
+{   
+    std::cout << "\n\nINTERPRETER TESTS\n\n";
     using str_helper::compare;
     using str_helper::print_diff;
     struct interpreter_test_case
@@ -86,8 +88,11 @@ void interpreter_test()
         {"just_minus_among_nums.txt", 0, 0, true},
         {"missing_num_in_row.txt", 0, 0, true},
         {"extra_num_in_row.txt", 0, 0, true},
+        {"different_delims.txt", 2, 3, true},
         {"extra_spaces.txt", 4, 5, true},
         {"empty_file.txt", 0, 0, true},
+        {"negative_nums.txt", 3, 3, false},
+        {"decimal_nums.txt", 2, 3, false},
         {"matrix_1x1.txt", 1, 1, false},
         {"matrix_1x3.txt", 1, 3, false},
         {"matrix_2x2.txt", 2, 2, false},
@@ -163,17 +168,17 @@ void task()
         std::cout << "A\n";
         std::cout << a << "\n\n";
 
-        std::cout << "A^(-1)\n";
+        std::cout << "A^-1\n";
         std::cout << (a ^ -1) << "\n\n";
 
         std::cout << "B\n";
         std::cout << b << "\n\n";
 
-        std::cout << "Test\n";
+        std::cout << "A^-1 * A\n";
         std::cout << (a ^ -1) * a << "\n\n";
 
         x = (a ^ -1) * b;
-        std::cout << "X\n";
+        std::cout << "X = A^-1 * B\n";
         std::cout << x;
 
         "output\\x.txt" << x;
