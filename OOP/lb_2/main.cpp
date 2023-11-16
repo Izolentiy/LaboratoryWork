@@ -73,15 +73,16 @@ void word_count_scenario() {
     };
     for (my::string &text : texts) {
         std::cout << "\n\n" << text << "\n";
-        my::linked_map<my::string, size_t> result = text.to_lower_case().unique_words();
+        using sort = my::string::sort_type;
+        my::linked_map<my::string, size_t> result = 
+            text.to_lower_case().unique_words(sort::alphabetic);
 
         size_t size = result.get_size();
         std::cout << "    Unique words : " << size << "\n";
     
         size_t val;
-        my::string key;
         for (size_t i = 0; i < size; ++i) {
-            key = result.get_key(i);
+            my::string key = result.get_key(i);
             val = result.get(key);
             std::cout << key << " - " << val << "\n";
         }
@@ -101,6 +102,6 @@ int main() {
     // hash_code_scenario();
     // string_find_scenario();
     // string_resize_scenario();
-    // word_count_scenario();
-    file_in_out_scenario();
+    word_count_scenario();
+    // file_in_out_scenario();
 }

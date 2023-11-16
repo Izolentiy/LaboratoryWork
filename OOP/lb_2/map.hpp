@@ -44,6 +44,64 @@ void my::linked_map<K, V>::remove(const K &key) {
 }
 
 template <class K, class V>
+void my::linked_map<K, V>::swap(node *left, node *right) { 
+    node *lprev, *rnext;
+    lprev = left->prev;
+    rnext = right->next;
+
+    if (rnext != nullptr)
+        rnext->prev = left;
+    if (lprev != nullptr) 
+        lprev->next = right;
+
+    left->next = rnext;
+    left->prev = right;
+    right->next = left;
+    right->prev = lprev;
+}
+
+
+
+template <class K, class V>
+void my::linked_map<K, V>::sort_helper(bool (*cmp)(node *left, node *right)) {
+    size_t l = 0, r = size-1;
+    node *curr, *prev;
+
+    // bubble sort
+    for (size_t i = l; i < r; ++i) {
+        curr = tail;
+        for (size_t j = r; j > i; --j) {
+            prev = curr->prev;
+            if (cmp(prev, curr)) {
+                if (curr == tail)
+                    tail = prev;
+                if (prev == head) 
+                    head = curr;
+                swap(prev, curr);
+            } else {
+                curr = prev;
+            }
+        }
+    }
+}
+
+template <class K, class V>
+void my::linked_map<K, V>::sort_by_key() {
+    auto compare_by_key = [](node *left, node *right) -> bool {
+        return left->get_key() > right->get_key();
+    };
+    sort_helper(compare_by_key);
+}
+
+template <class K, class V>
+void my::linked_map<K, V>::sort_by_val() {
+    auto compare_by_val = [](node *left, node *right) -> bool {
+        return left->get_val() > right->get_val();
+    };
+    sort_helper(compare_by_val);
+}
+
+template <class K, class V>
 K my::linked_map<K, V>::get_key(size_t index) {
     return move_to(index)->get_key();
 }

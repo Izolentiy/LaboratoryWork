@@ -15,27 +15,34 @@ namespace my {
 }
 
 class my::string {
+    friend std::ostream &my::operator<<(std::ostream &out, const my::string &str);
+
   public:
+    enum sort_type {
+        alphabetic,
+        by_order_in_text,
+        by_count_in_text
+    };
     static const size_t npos = SIZE_MAX; // not found index
 
     string();
     string(const char *str);
-    string(const my::string &other);
-    char *as_cstring() const;
+    string(const string &other);
     char *as_new_cstring() const;
-    bool operator==(const my::string &other);
-    string &operator<<(const my::string &other);
+    bool operator==(const string &other);
+    bool operator>(const string &other);
+    string &operator<<(const string &other);
     string &operator<<(const char *str);
     string &operator<<(char ch);
     string &operator<<(int num);
     string to_lower_case();
     uint32_t hash_code();
     void clear();
-    linked_map<string, size_t> unique_words();
-    size_t count_any(const char *str);
-    size_t count_isolated(const char *str);
-    size_t find_any(const char *str);
-    size_t find_isolated(const char *str);
+    linked_map<string, size_t> unique_words(sort_type sort = by_order_in_text);
+    size_t count_any(const string &str);
+    size_t count_isolated(const string &str);
+    size_t find_any(const string &str);
+    size_t find_isolated(const string &str);
     size_t get_size() const;
     size_t get_length() const;
     ~string();

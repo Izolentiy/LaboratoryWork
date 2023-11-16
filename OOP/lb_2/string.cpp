@@ -23,10 +23,6 @@ my::string::string(const my::string &other) {
     i_nt = other.i_nt;
 }
 
-char *my::string::as_cstring() const{
-    return data;
-}
-
 char *my::string::as_new_cstring() const {
     return substring(0, i_nt);
 }
@@ -82,6 +78,25 @@ bool my::string::operator==(const my::string &other) {
     return str_cmp(data, other.data);
 }
 
+bool my::string::operator>(const string &other) {
+    size_t min;
+    if (i_nt > other.i_nt) {
+        min = other.i_nt;
+    } else {
+        min = i_nt;
+    }
+    // hello
+    // he
+    for (size_t i = 0; i < min; ++i) {
+        if (data[i] > other.data[i]) {
+            return true;
+        } else if (data[i] < other.data[i]) {
+            return false;
+        }
+    }
+    return min == other.i_nt;
+}
+
 my::string &my::string::operator<<(const char *other) {
     resize_to_fit(other);
     size_t j = -1;
@@ -89,7 +104,6 @@ my::string &my::string::operator<<(const char *other) {
         data[i_nt + j] = other[j];
     }
     data[i_nt += j] = '\0';
-    std::cout << i_nt << "\n";
     return *this;
 }
 
@@ -122,15 +136,15 @@ my::string &my::string::operator<<(char ch) {
 }
 
 my::string &my::string::operator<<(const my::string &other) {
-    return (*this) << other.as_cstring();
+    return (*this) << other.data;
 }
 
-size_t my::string::count_any(const char *str) {
-    return count_helper(str, find_any);
+size_t my::string::count_any(const my::string &str) {
+    return count_helper(str.data, find_any);
 }
 
-size_t my::string::count_isolated(const char *str) {
-    return count_helper(str, find_isolated);
+size_t my::string::count_isolated(const my::string &str) {
+    return count_helper(str.data, find_isolated);
 }
 
 size_t my::string::count_helper(const char *str, find_func find) {
@@ -146,18 +160,18 @@ size_t my::string::count_helper(const char *str, find_func find) {
     return c;
 }
 
-size_t my::string::find_any(const char *str) {
-    size_t len = str_size(str) - 1;
+size_t my::string::find_any(const my::string &str) {
+    size_t len = str_size(str.data) - 1;
     if (len > i_nt)
         return npos;
-    return find_any(0, len, str);
+    return find_any(0, len, str.data);
 }
 
-size_t my::string::find_isolated(const char *str) {
-    size_t len = str_size(str) - 1;
+size_t my::string::find_isolated(const my::string &str) {
+    size_t len = str_size(str.data) - 1;
     if (len > i_nt)
         return npos;
-    return find_isolated(0, len, str);
+    return find_isolated(0, len, str.data);
 }
 
 size_t my::string::get_size() const {
@@ -234,15 +248,12 @@ my::string my::string::to_lower_case() {
     return res;
 }
 
-my::linked_map<my::string, size_t> my::string::unique_words() {
+my::linked_map<my::string, size_t> my::string::unique_words(sort_type sort) {
     my::linked_map<my::string, size_t> result;
     std::vector<bool> range(i_nt + 1); // to define ignore indexes
 
     bool started = false; // word started
-    size_t ws = 0; // word start
-    size_t we = 0; // word end
-    size_t wc = 0; // word count
-    size_t wl = 0; // word length
+    size_t ws, we, wc, wl; // word start / end / count / length
     char *word = nullptr;
     for (size_t i = 0; i <= i_nt; ++i) {
         if (range[i] && !started)
@@ -271,16 +282,23 @@ my::linked_map<my::string, size_t> my::string::unique_words() {
             ws = i;
         }
     }
+    switch (sort) {
+    case alphabetic:
+        result.sort_by_key(); break;
+    case by_count_in_text:
+        result.sort_by_val(); break;
+    }
     return result;
 }
 
 my::string::~string() {
+    // std::cout << "dtor called on " << data << " \n";
     delete[] data;
     data = nullptr;
 }
 
 std::ostream &my::operator<<(std::ostream &out, const my::string &str) {
-    return out << str.as_cstring();
+    return out << str.data;
 }
 
 void my::operator<<(const char *out, const my::string &str) {
