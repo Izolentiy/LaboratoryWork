@@ -19,6 +19,8 @@ class my::dl_list : public my::container<T> {
 
   public:
     dl_list() = default;
+    dl_list(const dl_list &other);
+    void operator=(const dl_list &other);
     void insert(const T &obj, size_t index);
     void push_back(const T &obj);
     void remove(size_t index);
@@ -30,6 +32,8 @@ class my::dl_list : public my::container<T> {
     node *head = nullptr;
     node *tail = nullptr;
 
+    void clear();
+    void append(const dl_list &other);
     node *move_to(size_t index) const;
 };
 

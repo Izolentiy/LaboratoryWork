@@ -1,6 +1,38 @@
 #pragma once
 
 template <class T>
+my::dl_list<T>::dl_list(const dl_list &other) {
+    this->append(other);
+}
+
+template <class T>
+void my::dl_list<T>::clear() {
+    node *temp = head;
+    node *to_delete = temp;
+    while (this->size-- > 0) {
+        temp = temp->next;
+        delete to_delete;
+        to_delete = temp;
+    }
+    this->size = 0;
+}
+
+template <class T>
+void my::dl_list<T>::append(const dl_list &other) {
+    node *onode = other.head; // other node
+    for (size_t i = 0; i < other.size; ++i) {
+        this->push_back(onode->val);
+        onode = onode->next;
+    }
+}
+
+template <class T>
+void my::dl_list<T>::operator=(const dl_list &other) {
+    this->clear();       // clear memory from previous elements
+    this->append(other); // append elements from other list
+}
+
+template <class T>
 void my::dl_list<T>::push_back(const T &obj) {
     insert(obj, this->size);
 }
@@ -82,13 +114,7 @@ T my::dl_list<T>::operator[](size_t index) const {
 
 template <class T>
 my::dl_list<T>::~dl_list() {
-    node *temp = head;
-    node *to_delete = temp;
-    while (this->size-- > 0) {
-        temp = temp->next;
-        delete to_delete;
-        to_delete = temp;
-    }
+    this->clear();
 }
 
 template <class T>

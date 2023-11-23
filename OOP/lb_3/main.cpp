@@ -10,6 +10,8 @@ void print(my::container<int> &list);
 void removal_scenario(my::container<int> &list);
 void insertion_scenario(my::container<int> &list);
 void extraction_scenario(my::container<int> &list);
+template <class T>
+void copy_scenario(my::container<int> &list);
 
 void doubly_linked_list_tests();
 void singly_linked_list_tests();
@@ -25,6 +27,7 @@ void doubly_linked_list_tests() {
     extraction_scenario(list);
     removal_scenario(list);
     insertion_scenario(list);
+    copy_scenario<my::dl_list<int>>(list);
 }
 
 void singly_linked_list_tests() {
@@ -33,6 +36,7 @@ void singly_linked_list_tests() {
     extraction_scenario(list);
     removal_scenario(list);
     insertion_scenario(list);
+    copy_scenario<my::sl_list<int>>(list);
 }
 
 void removal_scenario(my::container<int> &list) {
@@ -153,4 +157,31 @@ void print(my::container<int> &list) {
             std::cout << ", ";
     }
     std::cout << "\n";
+}
+
+template <class T>
+void copy_scenario(my::container<int> &list) {
+    std::cout << "\n\n ~ Copy scenario\n\n";
+
+    clear(list);
+    int size = 8;
+    populate(list, size);
+    print(list);
+
+    T *init_list = dynamic_cast<T *>(&list);
+    T list_assign;
+    T list_copy = *init_list; // copy constructor
+    list_assign = *init_list; // assignment operator
+
+    // insert on first
+    std::cout << "Insert on first in copies [0]\n";
+    list_copy.insert(11, 0);
+    list_assign.insert(12, 0);
+
+    std::cout << "(init list) : ";
+    print(list);
+    std::cout << "(list copy ctor) : ";
+    print(list_copy);
+    std::cout << "(list assign optor) : ";
+    print(list_assign);
 }

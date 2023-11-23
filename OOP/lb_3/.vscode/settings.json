@@ -51,6 +51,7 @@
         "fstream": "cpp",
         "codecvt": "cpp",
         "bitset": "cpp",
-        "map": "cpp"
+        "map": "cpp",
+        "cstdarg": "cpp"
     }
 }

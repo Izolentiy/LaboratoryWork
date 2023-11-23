@@ -18,6 +18,8 @@ class my::sl_list : public my::container<T> {
 
   public:
     sl_list() = default;
+    sl_list(const sl_list &other);
+    void operator=(const sl_list &other);
     void insert(const T &obj, size_t index);
     void push_back(const T &obj);
     void remove(size_t index);
@@ -28,6 +30,8 @@ class my::sl_list : public my::container<T> {
   private:
     node *head = nullptr;
 
+    void clear();
+    void append(const sl_list &other);
     node *move_to(size_t index) const;
 };
 
