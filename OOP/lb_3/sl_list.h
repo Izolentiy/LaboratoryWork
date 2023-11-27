@@ -20,11 +20,11 @@ class my::sl_list : public my::container<T> {
     sl_list() = default;
     sl_list(const sl_list &other);
     void operator=(const sl_list &other);
-    void insert(const T &obj, size_t index);
-    void push_back(const T &obj);
-    void remove(size_t index);
-    T &operator[](size_t index);
-    T operator[](size_t index) const;
+    void insert(const T &obj, size_t index) override;
+    void push_back(const T &obj) override;
+    void remove(size_t index) override;
+    T &operator[](size_t index) override;
+    T operator[](size_t index) const override;
     ~sl_list();
 
   private:
