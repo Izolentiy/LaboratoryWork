@@ -27,9 +27,10 @@ void my::dl_list<T>::append(const dl_list &other) {
 }
 
 template <class T>
-void my::dl_list<T>::operator=(const dl_list &other) {
+my::dl_list<T> &my::dl_list<T>::operator=(const dl_list &other) {
     this->clear();       // clear memory from previous elements
     this->append(other); // append elements from other list
+    return *this;
 }
 
 template <class T>

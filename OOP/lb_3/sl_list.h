@@ -19,7 +19,7 @@ class my::sl_list : public my::container<T> {
   public:
     sl_list() = default;
     sl_list(const sl_list &other);
-    void operator=(const sl_list &other);
+    sl_list &operator=(const sl_list &other);
     void insert(const T &obj, size_t index) override;
     void push_back(const T &obj) override;
     void remove(size_t index) override;

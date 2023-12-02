@@ -20,7 +20,7 @@ class my::dl_list : public my::container<T> {
   public:
     dl_list() = default;
     dl_list(const dl_list &other);
-    void operator=(const dl_list &other);
+    dl_list &operator=(const dl_list &other);
     void insert(const T &obj, size_t index) override;
     void push_back(const T &obj) override;
     void remove(size_t index) override;
