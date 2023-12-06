@@ -7,7 +7,7 @@
             "args": [
                 "-fdiagnostics-color=always",
                 "-g",
-                "main.cpp", "bin_tree.cpp",
+                "main.cpp", "bin_tree.cpp", "tree_printer.cpp",
                 "-o",
                 "build\\main.exe"
             ],
