@@ -65,6 +65,8 @@ void my::bin_tree::remove(const int &obj) {
     if (subroot == nullptr)
         return; // not found
     remove(subroot);
+    if (subroot == this->root && root->is_leaf())
+        root = nullptr;
 }
 
 void my::bin_tree::remove(node *to_remove) {
@@ -101,7 +103,7 @@ void my::bin_tree::remove(node *to_remove) {
 void my::bin_tree::dispose(node *to_delete) {
     node *parent = to_delete->parent;
     if (parent == nullptr) {
-        // strange scenario
+        // disposing root
     } else if (parent->left == to_delete) {
         parent->left = nullptr;
     } else if (parent->right == to_delete) {
@@ -146,6 +148,30 @@ my::bin_tree::node *my::bin_tree::get_min(node *subroot) {
 
 uint16_t my::bin_tree::get_height() {
     return get_height(0, root);
+}
+
+my::bin_tree my::bin_tree::get_subtree(const int &obj) {
+    bin_tree subtree;
+    node *temp = root;
+    bool flag = false;
+    while (true) {
+        if (temp == nullptr) {
+            break; // not found
+        } else if (temp->val > obj) {
+            if (flag) {
+                break;
+            } else {
+                flag = true;
+                if (temp->left == nullptr)
+                    break;
+                temp = temp->left;
+            }
+        } else if (temp->val <= obj) {
+            temp = temp->right;
+        }
+    }
+    subtree.copy(temp);
+    return subtree;
 }
 
 uint16_t my::bin_tree::get_height(uint16_t root_distance, node *subroot) {

@@ -43,6 +43,7 @@ class my::bin_tree {
     void remove(const int &obj);
     bool contains(const int &obj);
     uint16_t get_height();
+    bin_tree get_subtree(const int &obj);
     int get_min();
     int get_max();
     ~bin_tree();
