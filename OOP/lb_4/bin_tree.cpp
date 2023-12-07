@@ -64,9 +64,9 @@ void my::bin_tree::remove(const int &obj) {
     node *subroot = move_to(obj);
     if (subroot == nullptr)
         return; // not found
-    remove(subroot);
     if (subroot == this->root && root->is_leaf())
         root = nullptr;
+    remove(subroot);
 }
 
 void my::bin_tree::remove(node *to_remove) {

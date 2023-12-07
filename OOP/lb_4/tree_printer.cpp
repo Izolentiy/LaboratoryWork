@@ -122,6 +122,16 @@ my::tree_printer &my::tree_printer::operator<<(const char *str) {
     return *this;
 }
 
+my::tree_printer &my::tree_printer::operator<<(int num) {
+    *out << num;
+    return *this;
+}
+
+my::tree_printer &my::tree_printer::operator<<(double num) {
+    *out << num;
+    return *this;
+}
+
 my::tree_printer &my::tree_printer::set_ostream(std::ostream &out) {
     this->out = &out;
     return *this;
