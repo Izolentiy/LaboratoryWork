@@ -23,9 +23,9 @@ class my::bin_tree {
   private:
     node *root = nullptr;
     void insert(node *to_insert, node *subroot);
-    void remove(node *to_remove);
+    void remove(node *to_remove); 
     void dispose(node *to_delete);
-    uint16_t get_height(uint16_t root_distance, node *subroot);
+    int get_height(node *subroot);
     node *move_to(const int &obj);
     node *get_max(node *subroot);
     node *get_min(node *subroot);
@@ -42,7 +42,7 @@ class my::bin_tree {
     void insert(const int &obj);
     void remove(const int &obj);
     bool contains(const int &obj);
-    uint16_t get_height();
+    int get_height();
     bin_tree get_subtree(const int &obj);
     int get_min();
     int get_max();

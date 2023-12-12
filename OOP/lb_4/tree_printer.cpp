@@ -13,7 +13,7 @@ void my::tree_printer::draw_tree(bin_tree::node *root) {
     }
 }
 
-bool my::tree_printer::draw(bin_tree::node *root, uint16_t root_distance) {
+bool my::tree_printer::draw(bin_tree::node *root, int root_distance) {
     if (root_distance == print_distance || root == nullptr) {
         if (is_printing_nodes)
             draw_node(root, root_distance);
@@ -34,7 +34,7 @@ bool my::tree_printer::draw(bin_tree::node *root, uint16_t root_distance) {
     return false;
 }
 
-void my::tree_printer::draw_node(bin_tree::node *root, uint16_t root_distance) {
+void my::tree_printer::draw_node(bin_tree::node *root, int root_distance) {
     int tab = pow(2, print_depth - 1 - root_distance) - 1;
     char_sequence es {' ', tab * 2}; // edge space
     char_sequence eu {'_', tab * 2}; // edge underscore
@@ -54,7 +54,7 @@ void my::tree_printer::draw_node(bin_tree::node *root, uint16_t root_distance) {
     }
 }
 
-void my::tree_printer::draw_branch(bin_tree::node *root, uint16_t root_distance) {
+void my::tree_printer::draw_branch(bin_tree::node *root, int root_distance) {
     if (root_distance > 0) {
         int tab = pow(2, print_depth - 1 - root_distance) - 1;
         char_sequence es {' ', tab * 2};
@@ -82,8 +82,8 @@ void my::tree_printer::print_straight(bin_tree::node *subroot) {
 
 void my::tree_printer::print_reversed(bin_tree::node *subroot) {
     if (subroot == nullptr) return;
-    print_reversed(subroot->right);
     print_reversed(subroot->left);
+    print_reversed(subroot->right);
     print_node(subroot);
 }
 
@@ -91,7 +91,7 @@ void my::tree_printer::print_node(bin_tree::node *node) {
     *out << ' ' << node->val << ' ';
 }
 
-my::tree_printer &my::tree_printer::set_print_depth(uint16_t level) {
+my::tree_printer &my::tree_printer::set_print_depth(int level) {
     this->print_depth = level;
     return *this;
 }

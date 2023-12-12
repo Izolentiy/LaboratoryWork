@@ -42,22 +42,17 @@ void my::bin_tree::insert(node *to_insert, node *subroot) {
         if (subroot->right == nullptr) {
             subroot->right = to_insert;
             to_insert->parent = subroot;
-            return;
         } else {
             insert(to_insert, subroot->right);
-            return;
         }
     } else if (subroot->val > to_insert->val) {
         if (subroot->left == nullptr) {
             subroot->left = to_insert;
             to_insert->parent = subroot;
-            return;
         } else {
             insert(to_insert, subroot->left);
-            return;
         }
     }
-    // values are equal
 }
 
 void my::bin_tree::remove(const int &obj) {
@@ -146,8 +141,18 @@ my::bin_tree::node *my::bin_tree::get_min(node *subroot) {
     return temp;
 }
 
-uint16_t my::bin_tree::get_height() {
-    return get_height(0, root);
+int my::bin_tree::get_height(node *subroot) {
+    if (subroot == nullptr) {
+        return -1;
+    } else {
+        int left = get_height(subroot->left);
+        int right = get_height(subroot->right);
+        return 1 + std::max(left, right);
+    }
+}
+
+int my::bin_tree::get_height() {
+    return get_height(root);
 }
 
 my::bin_tree my::bin_tree::get_subtree(const int &obj) {
@@ -172,18 +177,6 @@ my::bin_tree my::bin_tree::get_subtree(const int &obj) {
     }
     subtree.copy(temp);
     return subtree;
-}
-
-uint16_t my::bin_tree::get_height(uint16_t root_distance, node *subroot) {
-    if (subroot == nullptr) {
-        if (root_distance == 0)
-            return root_distance;
-        return --root_distance;
-    }
-    ++root_distance;
-    uint16_t left = get_height(root_distance, subroot->left);
-    uint16_t right = get_height(root_distance, subroot->right);
-    return std::max(left, right);
 }
 
 int my::bin_tree::get_min() {
