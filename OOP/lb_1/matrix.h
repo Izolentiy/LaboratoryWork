@@ -27,7 +27,7 @@ class matrix
         ~row();
 
     private:
-        std::vector<T> &data; // data of parent matrix
+        std::vector<T> &data;      // data of parent matrix
         int &col_count;            // column count of parent matrix
         int row_num;               // row number
         void check_range(int col);
@@ -80,6 +80,7 @@ private:
     T get_minor(int row, int col);
     T &get(int row, int col); // index starts with 0
     T get(int row, int col) const;
+    void complete_row(int n, int i);
     void check_range(int row);
 };
 

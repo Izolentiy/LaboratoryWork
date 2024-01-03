@@ -126,40 +126,40 @@ T matrix<T>::determinant()
 
     T result = 1;
     T mult = 0.0;
-    T temp;
     int n = 0;
     for (int i = 0; i < cols-1; ++i)
     {
         for (int j = n + 1; j < rows; ++j)
         {
-            T chis = t[j][i];
-            T znam = t[n][i];
             if (my::abs(t[n][i]) < ZERO_EPSILON)
             {
-                for (int k = n + 1; k < rows; ++k)
-                {
-                    if (my::abs(t[k][i]) > ZERO_EPSILON)
-                    {
-                        for (int p = i; p < cols; ++p)
-                        {
-                            t[n][p] += t[k][p];
-                        }
-                        break;
-                    }
-                }
+                t.complete_row(n, i);
             }
             mult = t[j][i] / t[n][i];
             for (int k = n; k < cols; ++k)
             {
-                temp = t[j][k] - t[n][k] * mult;
                 t[j][k] -= t[n][k] * mult;
             }
         }
-        // std::cout << "\n" << t << "\n";
         result *= t[n][n];
         ++n;
     }
     return result * t[n][n];
+}
+
+template <class T>
+void matrix<T>::complete_row(int row, int col) {
+    for (int k = row + 1; k < rows; ++k)
+    {
+        if (my::abs(get(k, col)) > ZERO_EPSILON)
+        {
+            for (int p = 0; p < cols; ++p)
+            {
+                get(row, p) += get(k, p);
+            }
+            break;
+        }
+    }
 }
 
 template <class T>
