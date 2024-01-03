@@ -1,6 +1,7 @@
 #include "str_helper.h"
 #include "time_helper.hpp"
 #include "matrix.h"
+#include "complex.h"
 
 void scenario_1();
 void scenario_2();
@@ -10,16 +11,44 @@ void double_converter_test();
 void interpreter_test();
 void determinant_test();
 void task();
+void complex_equations_system();
 
 int main()
 {
-    // scenario_1();
-    // scenario_2();
-    // scenario_3();
-    // scenario_4();
-    task();
-    // double_converter_test();
-    interpreter_test();
+    // task();
+    complex_equations_system();
+    
+    // std::cout << 0.07/0.00 << "\n";
+    // std::cout << 0.00/0.00;
+
+    // matrix<complex> a("input\\for_test_purpose.txt");
+    // std::cout << a << "\n";
+    // std::cout << a.determinant() << "\n";
+}
+
+void complex_equations_system() {
+    matrix<complex> a("input\\complex_A.txt");
+    matrix<complex> b("input\\complex_B.txt");
+    matrix<complex> x;
+    
+    std::cout << "A\n";
+    std::cout << a << "\n\n";
+
+    std::cout << "det A:\n";
+    std::cout << a.determinant() << "\n\n";
+
+    std::cout << "A^-1\n";
+    std::cout << (a ^ -1) << "\n\n";
+
+    std::cout << "B\n";
+    std::cout << b << "\n\n";
+
+    std::cout << "A^-1 * A\n";
+    std::cout << (a ^ -1) * a << "\n\n";
+
+    x = (a ^ -1) * b;
+    std::cout << "X = A^-1 * B\n";
+    std::cout << x;
 }
 
 void double_converter_test()
@@ -106,11 +135,11 @@ void interpreter_test()
         bool rows_match = true;
         std::string status = FAILURE;
         std::string filename;
-        matrix m;
+        matrix<double> m;
         try
         {
             filename = "test_cases\\" + t.filename;
-            m = matrix(filename);
+            m = matrix<double>(filename);
             if (t.expected_invalid)
                 valid_match = false;
             if (m.get_cols() != t.expected_cols)
@@ -161,9 +190,9 @@ void task()
 {
     try
     {
-        matrix a("input\\matrix-A.txt");
-        matrix b("input\\matrix-B.txt");
-        matrix x;
+        matrix<double> a("input\\matrix-A.txt");
+        matrix<double> b("input\\matrix-B.txt");
+        matrix<double> x;
 
         std::cout << "A\n";
         std::cout << a << "\n\n";
@@ -194,8 +223,8 @@ void scenario_4()
 {
     try
     {
-        matrix d("input\\matrix_D.txt");
-        matrix a("input\\matrix_A.txt");
+        matrix<double> d("input\\matrix_D.txt");
+        matrix<double> a("input\\matrix_A.txt");
         std::cout << " ~~~ A and D created\n\n";
 
         matrix c = d; // copy constructor
@@ -220,8 +249,8 @@ void scenario_3()
 {
     try
     {
-        matrix d("input\\matrix_D.txt");
-        matrix a("input\\matrix_A.txt");
+        matrix<double> d("input\\matrix_D.txt");
+        matrix<double> a("input\\matrix_A.txt");
         double det_d = 0, det_a = 0;
         det_d = d.determinant();
         det_a = a.determinant();
@@ -247,7 +276,7 @@ void scenario_2()
 {
     try
     {
-        matrix a = matrix("input\\matrix_A.txt");
+        matrix<double> a = matrix<double>("input\\matrix_A.txt");
         double det = 0.0;
 
         auto action = [&]()
