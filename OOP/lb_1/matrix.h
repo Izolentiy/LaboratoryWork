@@ -41,7 +41,10 @@ public:
     matrix(int rows, int cols);
     matrix(std::vector<T> elems, int rows, int cols);
     matrix(const std::string &input_filename);
-    matrix(const matrix &matrix);
+    matrix(const matrix &other);
+    matrix(matrix &&other);
+    matrix &operator=(const matrix &other);
+    matrix &operator=(matrix &&other);
 
     T determinant();
     matrix transposed();
@@ -54,7 +57,6 @@ public:
     matrix operator*(double num);
     void operator*=(const matrix &other);
     void operator*=(double num);
-    matrix &operator=(const matrix &other);
     row &operator[](int row);
 
     int get_cols() const;

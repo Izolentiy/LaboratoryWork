@@ -1,3 +1,4 @@
+#include "matrix.h"
 #pragma once
 
 namespace my {
@@ -81,7 +82,7 @@ matrix<complex>::matrix(const std::string &input_filename)
         fin.seekg(std::ios::beg); // set read position to start
         cinterpreter ci(fin);
         while (fin) {
-            while (fin.peek() == ';' || fin.peek() == '\n') {
+            while (fin.peek() == ';' || fin.peek() == '\n' || fin.peek() == ' ') {
                 fin.get(); // ';'
             }
             if (fin.peek() == EOF) break;
@@ -108,6 +109,16 @@ matrix<T>::matrix(const matrix &other)
 {
     // std::cout << "Copy ctor called" << std::endl;
     (*this) = other;
+}
+
+template <class T>
+matrix<T>::matrix(matrix &&other) {
+    this->elems = std::move(other.elems);
+    this->rows = other.rows;
+    this->cols = other.cols;
+    this->print_delim = other.print_delim;
+    this->print_prec = other.print_prec;
+    this->print_width = other.print_width;
 }
 
 template <class T>
@@ -347,6 +358,18 @@ matrix<T> &matrix<T>::operator=(const matrix<T> &other)
     this->print_width = other.print_width;
     this->print_delim = other.print_delim;
     return (*this);
+}
+
+template <class T>
+matrix<T> &matrix<T>::operator=(matrix &&other) {
+    this->elems.clear(); // is it necessary?
+    this->elems = std::move(other.elems);
+    this->rows = other.rows;
+    this->cols = other.cols;
+    this->print_delim = other.print_delim;
+    this->print_prec = other.print_prec;
+    this->print_width = other.print_width;
+    return *this;
 }
 
 template <class T>
