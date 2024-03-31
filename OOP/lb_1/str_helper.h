@@ -28,11 +28,8 @@ namespace str_helper
     bool is_delim(char ch);
     bool is_number_char(char ch);
     size_t count(std::string &str, char ch);
-    size_t validate(std::string str);
-    double to_double(std::string str);
-    void add_elements(std::vector<double> &dest, std::string &str);
-
     bool compare(const char *s1, const char *s2);
+
     template <class T>
     void print_diff(const char *label, T expected, T result);
 }

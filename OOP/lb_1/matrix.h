@@ -3,8 +3,7 @@
 #include <iostream>
 #include <iomanip>
 #include <fstream>
-#include "complex.h"
-#include "interpreter.hpp"
+#include "complex/interpreter.hpp"
 
 template <class T>
 class matrix;

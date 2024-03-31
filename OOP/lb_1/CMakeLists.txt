@@ -1,0 +1,6 @@
+cmake_minimum_required(VERSION 3.10)
+project(matrix)
+set(CMAKE_CXX_STANDARD 17)
+add_subdirectory(complex)
+add_executable(matrix main.cpp)
+target_link_libraries(matrix PUBLIC complex)
