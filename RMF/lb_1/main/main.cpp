@@ -7,20 +7,23 @@ int main() {
     std::string ipAddress = "192.168.0.1";
     my::Com com;
 
-    std::cout << "Connect to " << ipAddress << std::endl;
-    com.setAddress(ipAddress.c_str());
     try {
+        std::cout << "Connect to " << ipAddress << std::endl;
+        com.setAddress(ipAddress.c_str());
         com.connectToServer();
-    } catch (const std::exception &e) {
+
+        std::cout << "Connected successfully!" << std::endl;
+        // some work here
+
+        std::cout << "Disconnect from server." << std::endl;
+        com.disconnectFromServer();
+    } catch (const rec::robotino::api2::RobotinoException &e) {
         std::cerr << "Unable to connect to " << com.address() << '\n';
         std::cerr << e.what() << std::endl;
-        rec::robotino::api2::shutdown();
-        exit(1);
+    } catch (const std::exception &e) {
+        std::cerr << "Error: " << e.what() << '\n';
     }
-    std::cout << "Connected successfully!" << std::endl;
 
-    std::cout << "Disconnect from server." << std::endl;
-    com.disconnectFromServer();
     rec::robotino::api2::shutdown();
     return 0;
 }
