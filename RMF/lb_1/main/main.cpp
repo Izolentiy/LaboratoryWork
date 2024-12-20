@@ -1,29 +1,76 @@
-#include <api/Com.h>
-#include <iostream>
+#include "api/Bumper.h"
+#include "api/Com.h"
+#include "move/movements.h"
+#include "util/logs.h"
+#include "util/camera.h"
+#include <rec/robotino/api2/RobotinoException.h>
+#include <vector>
+
+namespace robotino = rec::robotino::api2;
+robotino::OmniDrive omniDrive;
+my::Com com;
+my::Bumper bumper;
+
+uint32_t startTime;
+extern int pressedKey;
+
+void squareMovementUsingCamera(std::ostream &log) {
+    startTime = com.msecsElapsed();
+    auto elapsed = 0;
+
+    cv::Point2f points[4] = {
+        cv::Point2f(100, 100),
+        cv::Point2f(100, 200),
+        cv::Point2f(200, 200),
+        cv::Point2f(200, 100)
+    };
+    auto i = 0;
+    auto end = points[i];
+    processCameraImage();
+    auto start = getCoordinatesFromImage();
+    
+    while (!bumper.value() && com.isConnected() && pressedKey != ESCAPE_KEY) {
+        elapsed = com.msecsElapsed() - startTime;
+        if (elapsed > VELOCITY_UPDATE_LATENCY) {
+            processCameraImage();
+            start = getCoordinatesFromImage();
+            std::cout << "Robot position: " << start << '\n';
+            if (distance(start, end) < 3) {
+                end = points[i];
+                if (++i == 4) i = 0;
+            }
+            setVelocity(start, end, 0.1f);
+            logRobotinoState(log);
+            elapsed = 0;
+            startTime = com.msecsElapsed();
+        }
+    }
+}
 
 int main() {
     std::cout << "START OF THE PROGRAM" << std::endl;
 
     std::string ipAddress = "192.168.0.1";
-    my::Com com;
+    std::ofstream log(getLogPath());
 
     try {
         std::cout << "Connect to " << ipAddress << std::endl;
         com.setAddress(ipAddress.c_str());
         com.connectToServer();
 
-        std::cout << "Connected successfully!" << std::endl;
-        // some work here
+        squareMovementUsingCamera(log);
 
-        std::cout << "Disconnect from server." << std::endl;
+        std::cout << "Disconnect from " << ipAddress << std::endl;
         com.disconnectFromServer();
-    } catch (const rec::robotino::api2::RobotinoException &e) {
+    } catch (const robotino::RobotinoException &e) {
         std::cerr << "Unable to connect to " << com.address() << '\n';
         std::cerr << e.what() << std::endl;
     } catch (const std::exception &e) {
         std::cerr << "Error: " << e.what() << '\n';
     }
 
-    rec::robotino::api2::shutdown();
+    log.close();
+    robotino::shutdown();
+
     return 0;
 }

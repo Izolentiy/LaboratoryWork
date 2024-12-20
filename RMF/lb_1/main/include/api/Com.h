@@ -1,10 +1,11 @@
 #pragma once
-#include "rec/robotino/api2/all.h"
+#include <rec/robotino/api2/Com.h>
 #include <iostream>
 
+namespace robotino = rec::robotino::api2;
 namespace my {
 
-class Com : public rec::robotino::api2::Com {
+class Com : public robotino::Com {
   public:
     Com();
     void errorEvent(const char *error) override;
