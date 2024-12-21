@@ -2,7 +2,7 @@
 
 bool headerInited = false;
 extern my::Com com;
-extern uint32_t startTime;
+extern uint32_t robotStartTime;
 rec::robotino::api2::Motor motor[MOTOR_COUNT];
 
 std::filesystem::path getLogPath() {
@@ -15,8 +15,8 @@ std::filesystem::path getLogPath() {
     char folderName[dateSize], timeString[timeSize];
     std::time_t time = std::time({});
 
-    std::strftime(folderName, dateSize, "%F", std::gmtime(&time));
-    std::strftime(timeString, timeSize, "%H-%M-%S", std::gmtime(&time));
+    std::strftime(folderName, dateSize, "%F", std::localtime(&time));
+    std::strftime(timeString, timeSize, "%H-%M-%S", std::localtime(&time));
     std::string fileName = std::string(timeString) + ".csv";
 
     path folderPath = rootPath / folderName;
@@ -35,7 +35,7 @@ void logRobotinoState(std::ostream &log) {
         }
     }
     unsigned time = com.msecsElapsed();
-    log << time - startTime << ';';
+    log << time - robotStartTime << ';';
     for (int i = 0; i < MOTOR_COUNT; ++i) {
         log << motor[i].actualPosition() << ';';
     }

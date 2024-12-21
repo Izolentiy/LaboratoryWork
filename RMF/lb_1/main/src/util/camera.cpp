@@ -82,8 +82,8 @@ float getAngleFromImage() {
         return nan;
     }
     auto cor = corners[0];
-    float dx = cor[1].x - cor[0].x;
-    float dy = cor[1].y - cor[0].y;
+    float dx = cor[1].y - cor[0].y;
+    float dy = cor[1].x - cor[0].x;
     return atan2f(dy, dx);
 }
 

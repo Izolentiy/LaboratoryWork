@@ -11,18 +11,18 @@ robotino::OmniDrive omniDrive;
 my::Com com;
 my::Bumper bumper;
 
-uint32_t startTime;
+uint32_t robotStartTime;
 extern int pressedKey;
 
 void squareMovementUsingCamera(std::ostream &log) {
-    startTime = com.msecsElapsed();
     auto elapsed = 0;
+    auto moveTimer = robotStartTime;
 
     cv::Point2f points[4] = {
-        cv::Point2f(100, 100),
-        cv::Point2f(100, 200),
         cv::Point2f(200, 200),
-        cv::Point2f(200, 100)
+        cv::Point2f(200, 400),
+        cv::Point2f(400, 400),
+        cv::Point2f(400, 200)
     };
     auto i = 0;
     auto end = points[i];
@@ -30,10 +30,11 @@ void squareMovementUsingCamera(std::ostream &log) {
     auto start = getCoordinatesFromImage();
     
     while (!bumper.value() && com.isConnected() && pressedKey != ESCAPE_KEY) {
-        elapsed = com.msecsElapsed() - startTime;
+        elapsed = com.msecsElapsed() - moveTimer;
         if (elapsed > VELOCITY_UPDATE_LATENCY) {
             processCameraImage();
             start = getCoordinatesFromImage();
+            
             std::cout << "Robot position: " << start << '\n';
             if (distance(start, end) < 3) {
                 end = points[i];
@@ -42,7 +43,7 @@ void squareMovementUsingCamera(std::ostream &log) {
             setVelocity(start, end, 0.1f);
             logRobotinoState(log);
             elapsed = 0;
-            startTime = com.msecsElapsed();
+            moveTimer = com.msecsElapsed();
         }
     }
 }
@@ -57,6 +58,7 @@ int main() {
         std::cout << "Connect to " << ipAddress << std::endl;
         com.setAddress(ipAddress.c_str());
         com.connectToServer();
+        robotStartTime = com.msecsElapsed();
 
         squareMovementUsingCamera(log);
 
